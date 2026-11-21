@@ -1,0 +1,221 @@
+{
+  "title": "Bambu Filament Manager",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Bambu Filament Manager",
+        "description": "Bambu Lab printers found: {count} ({printers}).\n\nThe integration manages your filament spools, reads AMS slots, NFC stickers and the usage per print. Afterwards the “Bambu Filament” card is available in your dashboard."
+      },
+      "no_printer": {
+        "title": "No Bambu Lab printer found yet",
+        "description": "This integration builds on the **Bambu Lab** integration (ha-bambulab, via HACS). The printer connection is set up there:\n\n1. HACS → install **Bambu Lab** and restart Home Assistant.\n2. On the printer: Settings → **LAN only / developer mode** – it shows the **IP address** and the **access code**. The **serial number** is under device info.\n3. Settings → Devices & services → add **Bambu Lab** → choose “Local (LAN)” → enter IP, serial number and access code.\n\nThe printer then shows up here automatically. You can continue now – the printer is detected later."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Settings",
+        "description": "Messages are sent to all selected targets (text only). The list shows every notification service set up in your Home Assistant – e.g. mobile app, Telegram or WhatsApp if installed.",
+        "data": {
+          "notify_targets": "Send messages to",
+          "notify_scan": "Message when a spool is scanned",
+          "notify_unknown_tag": "Message for unknown NFC sticker",
+          "notify_insufficient": "Warn when a print needs more filament than left",
+          "notify_summary": "Report usage after every print",
+          "low_threshold": "“Almost empty” below",
+          "default_spool_weight": "Empty spool weight (default)",
+          "default_net_weight": "Filament on a new spool (default)",
+          "track_bambu_spools": "Add original Bambu spools (RFID) automatically",
+          "ignored_tags": "Ignore NFC stickers"
+        },
+        "data_description": {
+          "ignored_tags": "Stickers that have a name in HA are ignored anyway (e.g. a door).",
+          "default_spool_weight": "Used to compute the rest when weighing (scale shows filament + spool)."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "pending": {
+        "name": "Scanned spool"
+      }
+    }
+  },
+  "services": {
+    "add_spool": {
+      "name": "Add spool",
+      "description": "Creates a new filament spool.",
+      "fields": {
+        "name": {
+          "name": "Name"
+        },
+        "vendor": {
+          "name": "Vendor"
+        },
+        "material": {
+          "name": "Material"
+        },
+        "filament_id": {
+          "name": "Filament ID (profile)"
+        },
+        "color": {
+          "name": "Color (RRGGBB or RRGGBBAA)"
+        },
+        "nozzle_min": {
+          "name": "Nozzle min °C"
+        },
+        "nozzle_max": {
+          "name": "Nozzle max °C"
+        },
+        "spool_weight": {
+          "name": "Empty spool g"
+        },
+        "net_weight": {
+          "name": "Filament when new g"
+        },
+        "remaining": {
+          "name": "Remaining g"
+        },
+        "gross_weight": {
+          "name": "Scale (filament + spool) g"
+        },
+        "tag": {
+          "name": "NFC sticker ID"
+        },
+        "note": {
+          "name": "Note"
+        },
+        "tray": {
+          "name": "AMS slot"
+        }
+      }
+    },
+    "update_spool": {
+      "name": "Update spool",
+      "description": "Changes fields of a spool.",
+      "fields": {
+        "spool_id": {
+          "name": "Spool ID"
+        },
+        "name": {
+          "name": "Name"
+        },
+        "vendor": {
+          "name": "Vendor"
+        },
+        "material": {
+          "name": "Material"
+        },
+        "filament_id": {
+          "name": "Filament ID (profile)"
+        },
+        "color": {
+          "name": "Color (RRGGBB or RRGGBBAA)"
+        },
+        "nozzle_min": {
+          "name": "Nozzle min °C"
+        },
+        "nozzle_max": {
+          "name": "Nozzle max °C"
+        },
+        "spool_weight": {
+          "name": "Empty spool g"
+        },
+        "net_weight": {
+          "name": "Filament when new g"
+        },
+        "remaining": {
+          "name": "Remaining g"
+        },
+        "gross_weight": {
+          "name": "Scale (filament + spool) g"
+        },
+        "tag": {
+          "name": "NFC sticker ID"
+        },
+        "note": {
+          "name": "Note"
+        }
+      }
+    },
+    "delete_spool": {
+      "name": "Delete spool",
+      "description": "Deletes a spool.",
+      "fields": {
+        "spool_id": {
+          "name": "Spool ID"
+        },
+        "delete_tag": {
+          "name": "Also delete the NFC sticker in HA"
+        }
+      }
+    },
+    "weigh_spool": {
+      "name": "Weigh spool",
+      "description": "Compute the rest from a scale reading (filament + spool).",
+      "fields": {
+        "spool_id": {
+          "name": "Spool ID"
+        },
+        "gross_weight": {
+          "name": "Scale (filament + spool) g"
+        }
+      }
+    },
+    "consume": {
+      "name": "Consume",
+      "description": "Subtracts grams from a spool.",
+      "fields": {
+        "spool_id": {
+          "name": "Spool ID"
+        },
+        "grams": {
+          "name": "Grams"
+        }
+      }
+    },
+    "assign_spool": {
+      "name": "Load spool into slot",
+      "description": "Sends the spool to the AMS slot (profile, color, temperature).",
+      "fields": {
+        "spool_id": {
+          "name": "Spool ID"
+        },
+        "tray": {
+          "name": "AMS slot"
+        }
+      }
+    },
+    "unassign_tray": {
+      "name": "Unlink slot",
+      "description": "Forgets which spool is in the slot.",
+      "fields": {
+        "tray": {
+          "name": "AMS slot"
+        }
+      }
+    },
+    "select_spool": {
+      "name": "Select spool",
+      "description": "Selects a spool as if scanned via NFC.",
+      "fields": {
+        "spool_id": {
+          "name": "Spool ID"
+        }
+      }
+    },
+    "clear_unknown_tag": {
+      "name": "Discard unknown sticker",
+      "description": "Discard unknown sticker"
+    },
+    "list_spools": {
+      "name": "List spools",
+      "description": "Returns all spools with their slot."
+    }
+  }
+}

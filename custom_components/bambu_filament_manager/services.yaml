@@ -1,0 +1,56 @@
+add_spool:
+  fields:
+    name: {required: true, selector: {text: {}}}
+    vendor: {selector: {text: {}}}
+    material: {example: PLA, selector: {text: {}}}
+    filament_id: {example: GFL99, selector: {text: {}}}
+    color: {example: FF0000FF, selector: {text: {}}}
+    nozzle_min: {selector: {number: {min: 150, max: 350, unit_of_measurement: "°C"}}}
+    nozzle_max: {selector: {number: {min: 150, max: 350, unit_of_measurement: "°C"}}}
+    spool_weight: {selector: {number: {min: 0, max: 1000, unit_of_measurement: g, mode: box}}}
+    net_weight: {selector: {number: {min: 0, max: 5000, unit_of_measurement: g, mode: box}}}
+    remaining: {selector: {number: {min: 0, max: 5000, unit_of_measurement: g, mode: box}}}
+    gross_weight: {selector: {number: {min: 0, max: 6000, unit_of_measurement: g, mode: box}}}
+    tag: {selector: {text: {}}}
+    note: {selector: {text: {}}}
+    tray: {selector: {entity: {integration: bambu_lab, domain: sensor}}}
+update_spool:
+  fields:
+    spool_id: {required: true, selector: {text: {}}}
+    name: {selector: {text: {}}}
+    vendor: {selector: {text: {}}}
+    material: {selector: {text: {}}}
+    filament_id: {selector: {text: {}}}
+    color: {selector: {text: {}}}
+    nozzle_min: {selector: {number: {min: 150, max: 350, unit_of_measurement: "°C"}}}
+    nozzle_max: {selector: {number: {min: 150, max: 350, unit_of_measurement: "°C"}}}
+    spool_weight: {selector: {number: {min: 0, max: 1000, unit_of_measurement: g, mode: box}}}
+    net_weight: {selector: {number: {min: 0, max: 5000, unit_of_measurement: g, mode: box}}}
+    remaining: {selector: {number: {min: 0, max: 5000, unit_of_measurement: g, mode: box}}}
+    gross_weight: {selector: {number: {min: 0, max: 6000, unit_of_measurement: g, mode: box}}}
+    tag: {selector: {text: {}}}
+    note: {selector: {text: {}}}
+delete_spool:
+  fields:
+    spool_id: {required: true, selector: {text: {}}}
+    delete_tag: {default: false, selector: {boolean: {}}}
+weigh_spool:
+  fields:
+    spool_id: {required: true, selector: {text: {}}}
+    gross_weight: {required: true, selector: {number: {min: 0, max: 6000, unit_of_measurement: g, mode: box}}}
+consume:
+  fields:
+    spool_id: {required: true, selector: {text: {}}}
+    grams: {required: true, selector: {number: {min: 0, max: 5000, unit_of_measurement: g, mode: box}}}
+assign_spool:
+  fields:
+    tray: {required: true, selector: {entity: {integration: bambu_lab, domain: sensor}}}
+    spool_id: {selector: {text: {}}}
+unassign_tray:
+  fields:
+    tray: {required: true, selector: {entity: {integration: bambu_lab, domain: sensor}}}
+select_spool:
+  fields:
+    spool_id: {selector: {text: {}}}
+clear_unknown_tag:
+list_spools:

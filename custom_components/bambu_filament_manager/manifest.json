@@ -1,0 +1,15 @@
+{
+  "domain": "bambu_filament_manager",
+  "name": "Bambu Filament Manager",
+  "after_dependencies": ["bambu_lab", "tag", "notify", "lovelace"],
+  "codeowners": ["@Trunks1982"],
+  "config_flow": true,
+  "dependencies": ["http", "frontend", "websocket_api"],
+  "documentation": "https://github.com/Trunks1982/ha-bambu-filament-manager",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/Trunks1982/ha-bambu-filament-manager/issues",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "0.1.0"
+}

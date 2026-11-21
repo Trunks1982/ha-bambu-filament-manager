@@ -1,0 +1,221 @@
+{
+  "title": "Bambu Filament Manager",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Bambu Filament Manager",
+        "description": "Gefundene Bambu-Lab-Drucker: {count} ({printers}).\n\nDie Integration verwaltet deine Filament-Rollen, liest AMS-Slots, NFC-Aufkleber und den Verbrauch je Druck. Die Karte „Bambu Filament“ steht danach im Dashboard zur Auswahl."
+      },
+      "no_printer": {
+        "title": "Noch kein Bambu-Lab-Drucker gefunden",
+        "description": "Diese Integration baut auf der Integration **Bambu Lab** (ha-bambulab, über HACS) auf. Die Verbindung zum Drucker richtest du dort ein:\n\n1. HACS → **Bambu Lab** installieren und Home Assistant neu starten.\n2. Am Drucker: Einstellungen → **LAN-Modus / Entwicklermodus** – dort stehen **IP-Adresse** und **Zugangscode (Access Code)**. Die **Seriennummer** steht unter Geräteinfo.\n3. Einstellungen → Geräte & Dienste → **Bambu Lab** hinzufügen → „Lokal (LAN)“ wählen → IP, Seriennummer und Zugangscode eintragen.\n\nDanach erscheint der Drucker hier automatisch. Du kannst jetzt schon fortfahren – der Drucker wird später erkannt."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Ist schon eingerichtet."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Einstellungen",
+        "description": "Nachrichten gehen an alle gewählten Ziele (nur Text). Angezeigt werden alle Benachrichtigungsdienste, die in deinem Home Assistant eingerichtet sind – z. B. Handy-App, Telegram oder WhatsApp, falls installiert.",
+        "data": {
+          "notify_targets": "Nachrichten senden an",
+          "notify_scan": "Nachricht wenn Rolle gescannt",
+          "notify_unknown_tag": "Nachricht bei unbekanntem NFC-Aufkleber",
+          "notify_insufficient": "Warnung wenn Filament für den Druck nicht reicht",
+          "notify_summary": "Verbrauch nach jedem Druck melden",
+          "low_threshold": "„Fast leer“ ab",
+          "default_spool_weight": "Gewicht leere Spule (Standard)",
+          "default_net_weight": "Filament auf neuer Rolle (Standard)",
+          "track_bambu_spools": "Original-Bambu-Rollen (RFID) automatisch übernehmen",
+          "ignored_tags": "NFC-Aufkleber ignorieren"
+        },
+        "data_description": {
+          "ignored_tags": "Aufkleber mit Namen in HA werden sowieso ignoriert (z. B. Tür).",
+          "default_spool_weight": "Zum Ausrechnen des Rests beim Wiegen (Waage zeigt Rolle + Spule)."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "pending": {
+        "name": "Gescannte Rolle"
+      }
+    }
+  },
+  "services": {
+    "add_spool": {
+      "name": "Rolle anlegen",
+      "description": "Legt eine neue Filament-Rolle an.",
+      "fields": {
+        "name": {
+          "name": "Name"
+        },
+        "vendor": {
+          "name": "Hersteller"
+        },
+        "material": {
+          "name": "Material"
+        },
+        "filament_id": {
+          "name": "Filament-ID (Profil)"
+        },
+        "color": {
+          "name": "Farbe (RRGGBB oder RRGGBBAA)"
+        },
+        "nozzle_min": {
+          "name": "Düse min °C"
+        },
+        "nozzle_max": {
+          "name": "Düse max °C"
+        },
+        "spool_weight": {
+          "name": "Leere Spule g"
+        },
+        "net_weight": {
+          "name": "Filament neu g"
+        },
+        "remaining": {
+          "name": "Rest g"
+        },
+        "gross_weight": {
+          "name": "Waage (Rolle mit Spule) g"
+        },
+        "tag": {
+          "name": "NFC-Aufkleber-ID"
+        },
+        "note": {
+          "name": "Notiz"
+        },
+        "tray": {
+          "name": "AMS-Slot"
+        }
+      }
+    },
+    "update_spool": {
+      "name": "Rolle ändern",
+      "description": "Ändert Felder einer Rolle.",
+      "fields": {
+        "spool_id": {
+          "name": "Rollen-ID"
+        },
+        "name": {
+          "name": "Name"
+        },
+        "vendor": {
+          "name": "Hersteller"
+        },
+        "material": {
+          "name": "Material"
+        },
+        "filament_id": {
+          "name": "Filament-ID (Profil)"
+        },
+        "color": {
+          "name": "Farbe (RRGGBB oder RRGGBBAA)"
+        },
+        "nozzle_min": {
+          "name": "Düse min °C"
+        },
+        "nozzle_max": {
+          "name": "Düse max °C"
+        },
+        "spool_weight": {
+          "name": "Leere Spule g"
+        },
+        "net_weight": {
+          "name": "Filament neu g"
+        },
+        "remaining": {
+          "name": "Rest g"
+        },
+        "gross_weight": {
+          "name": "Waage (Rolle mit Spule) g"
+        },
+        "tag": {
+          "name": "NFC-Aufkleber-ID"
+        },
+        "note": {
+          "name": "Notiz"
+        }
+      }
+    },
+    "delete_spool": {
+      "name": "Rolle löschen",
+      "description": "Löscht eine Rolle.",
+      "fields": {
+        "spool_id": {
+          "name": "Rollen-ID"
+        },
+        "delete_tag": {
+          "name": "NFC-Aufkleber auch in HA löschen"
+        }
+      }
+    },
+    "weigh_spool": {
+      "name": "Rolle wiegen",
+      "description": "Rest aus Waagenwert (Rolle mit Spule) berechnen.",
+      "fields": {
+        "spool_id": {
+          "name": "Rollen-ID"
+        },
+        "gross_weight": {
+          "name": "Waage (Rolle mit Spule) g"
+        }
+      }
+    },
+    "consume": {
+      "name": "Verbrauch abziehen",
+      "description": "Zieht Gramm von einer Rolle ab.",
+      "fields": {
+        "spool_id": {
+          "name": "Rollen-ID"
+        },
+        "grams": {
+          "name": "Gramm"
+        }
+      }
+    },
+    "assign_spool": {
+      "name": "Rolle in Slot legen",
+      "description": "Schickt die Rolle an den AMS-Slot (Profil, Farbe, Temperatur).",
+      "fields": {
+        "spool_id": {
+          "name": "Rollen-ID"
+        },
+        "tray": {
+          "name": "AMS-Slot"
+        }
+      }
+    },
+    "unassign_tray": {
+      "name": "Slot-Verknüpfung lösen",
+      "description": "Vergisst, welche Rolle im Slot steckt.",
+      "fields": {
+        "tray": {
+          "name": "AMS-Slot"
+        }
+      }
+    },
+    "select_spool": {
+      "name": "Rolle auswählen",
+      "description": "Wählt eine Rolle wie per NFC-Scan.",
+      "fields": {
+        "spool_id": {
+          "name": "Rollen-ID"
+        }
+      }
+    },
+    "clear_unknown_tag": {
+      "name": "Unbekannten Aufkleber verwerfen",
+      "description": "Unbekannten Aufkleber verwerfen"
+    },
+    "list_spools": {
+      "name": "Rollen auflisten",
+      "description": "Liefert alle Rollen mit Slot."
+    }
+  }
+}
