@@ -2,7 +2,7 @@
  * Shows printer status and the AMS like in Bambu Studio / Handy, and manages spools.
  * No build step, no external dependencies. */
 const DOMAIN = "bambu_filament_manager";
-const CARD_VERSION = "0.2.0";
+const CARD_VERSION = "0.3.0";
 
 const I18N = {
   en: {
@@ -20,7 +20,8 @@ const I18N = {
     net_weight: "Filament when new (g)", sw_hint: "(remembered per vendor)", remaining: "Remaining (g)", scale: "Or weigh: scale shows (g)", tag: "NFC sticker",
     take_tag: "Use last scanned sticker", save: "Save", delete: "Delete", delete_q: "Really delete this spool?", delete_tag: "Also delete the NFC sticker in Home Assistant",
     edit: "Edit spool", select: "Select (like NFC scan)", in_slot: "in", none: "No spools yet – create your first one.",
-    needs: "needs", job: "Print job", saved: "Saved", sent: "sent to the printer", camera: "Camera", show_all: "Show all", used_up: "used up",
+    needs: "needs", job: "Print job", linked_only: "linked (set color/profile on the printer)",
+    no_control: "The printer does not accept commands from Home Assistant (only in LAN developer mode). The spool is only linked – set color and filament profile on the printer or in Bambu Handy.", saved: "Saved", sent: "sent to the printer", camera: "Camera", show_all: "Show all", used_up: "used up",
     rest_after: "after this print", low: "almost empty", sort: "Sort", by_name: "Name", by_rest: "Remaining", by_color: "Color", hide_empty: "Hide empty spools",
     printer: "Printer", show_camera: "Show camera", show_spools: "Show spool list",
   },
@@ -39,7 +40,8 @@ const I18N = {
     net_weight: "Filament neu (g)", sw_hint: "(merkt sich je Hersteller)", remaining: "Rest (g)", scale: "Oder wiegen: Waage zeigt (g)", tag: "NFC-Aufkleber",
     take_tag: "Zuletzt gescannten Aufkleber nehmen", save: "Speichern", delete: "Löschen", delete_q: "Rolle wirklich löschen?", delete_tag: "NFC-Aufkleber auch in Home Assistant löschen",
     edit: "Rolle bearbeiten", select: "Auswählen (wie NFC-Scan)", in_slot: "in", none: "Noch keine Rollen – lege deine erste an.",
-    needs: "braucht", job: "Druckauftrag", saved: "Gespeichert", sent: "an den Drucker geschickt", camera: "Kamera", show_all: "Alle zeigen", used_up: "verbraucht",
+    needs: "braucht", job: "Druckauftrag", linked_only: "verknüpft (Farbe/Profil am Drucker einstellen)",
+    no_control: "Der Drucker nimmt keine Befehle von Home Assistant an (nur im LAN-Entwicklermodus). Die Rolle wird nur verknüpft – Farbe und Filament-Profil bitte am Drucker oder in Bambu Handy einstellen.", saved: "Gespeichert", sent: "an den Drucker geschickt", camera: "Kamera", show_all: "Alle zeigen", used_up: "verbraucht",
     rest_after: "nach diesem Druck", low: "fast leer", sort: "Sortieren", by_name: "Name", by_rest: "Rest", by_color: "Farbe", hide_empty: "Leere Rollen ausblenden",
     printer: "Drucker", show_camera: "Kamera zeigen", show_spools: "Rollenliste zeigen",
   },
@@ -355,6 +357,7 @@ class BambuFilamentCard extends HTMLElement {
       ${tr.source === "bambu" ? `<div class="note"><ha-icon icon="mdi:contactless-payment"></ha-icon>${esc(t.bambu_rfid)}${num(a.remain, -1) >= 0 ? ` (${a.remain}%)` : ""}</div>` :
         v.spool ? `<div class="kv"><span>${esc(t.linked)}</span><b>${esc(v.spool.name)}</b> <small>${Math.round(num(v.spool.remaining))} g</small> <button class="btn flat sm" data-a="edit" data-id="${esc(v.spool.id)}">${esc(t.edit)}</button></div>` :
         `<div class="kv"><span>${esc(t.linked)}</span><i>${esc(t.none_linked)}</i></div>${tr.stale_link ? `<div class="note warn">${esc(t.stale)}</div>` : ""}`}
+      ${tr.source !== "bambu" && p.can_control === false ? `<div class="note warn"><ha-icon icon="mdi:lock-outline"></ha-icon> ${esc(t.no_control)}</div>` : ""}
       ${tr.source !== "bambu" ? `
         ${pend ? `<button class="btn wide" data-a="assign" data-id="${esc(pend.id)}"><span class="dot" style="${fillStyle([pend.color])}"></span>${esc(pend.name)} – ${esc(t.put_here)}</button>` : ""}
         <div class="sec">${esc(t.assign)}</div>
@@ -547,7 +550,7 @@ class BambuFilamentCard extends HTMLElement {
         const tr = this._printer.units.flatMap((u) => u.trays).find((x) => x.entity_id === el.dataset.tray);
         if (pend && tr && tr.source !== "bambu") {
           // scanned spool waiting: one tap loads it (like the old flow)
-          if (await this._call("assign_spool", { tray: tr.entity_id, spool_id: pend.id })) this._toast(`${pend.name} → ${tr.label} ${t.sent}`);
+          if (await this._call("assign_spool", { tray: tr.entity_id, spool_id: pend.id })) this._toast(`${pend.name} → ${tr.label} ${this._printer.can_control === false ? t.linked_only : t.sent}`);
           break;
         }
         this._dialog = { type: "slot", tray: el.dataset.tray, q: "" };
@@ -558,7 +561,7 @@ class BambuFilamentCard extends HTMLElement {
         const s = this._spool(el.dataset.id);
         if (await this._call("assign_spool", { tray: this._dialog.tray, spool_id: el.dataset.id })) {
           const label = this._printer.units.flatMap((u) => u.trays).find((x) => x.entity_id === this._dialog.tray)?.label || "";
-          this._dialog = null; this._renderDialog(); this._toast(`${s?.name || ""} → ${label} ${t.sent}`);
+          this._dialog = null; this._renderDialog(); this._toast(`${s?.name || ""} → ${label} ${this._printer.can_control === false ? t.linked_only : t.sent}`);
         }
         break;
       }

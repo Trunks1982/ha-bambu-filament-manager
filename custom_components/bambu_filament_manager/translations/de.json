@@ -7,12 +7,13 @@
         "description": "Gefundene Drucker: {printers}.\n\nFertig einrichten oder noch einen Drucker hinzufügen?",
         "menu_options": {
           "finish": "Fertig einrichten",
-          "printer": "Weiteren Drucker hinzufügen"
+          "printer": "Weiteren Drucker hinzufügen – lokal (LAN)",
+          "cloud": "Weiteren Drucker hinzufügen – Bambu-Cloud (nur lesen)"
         }
       },
       "printer": {
         "title": "Drucker verbinden",
-        "description": "Die Angaben findest du am Drucker:\n• **IP-Adresse und Zugangscode:** Einstellungen → Netzwerk / WLAN (beim P1/A1/P2S im Menü „LAN-Modus“).\n• **Seriennummer:** Einstellungen → Geräteinfo, oder in Bambu Studio / Handy.\n\nTipp: Gib dem Drucker in deinem Router eine feste IP-Adresse.",
+        "description": "Die Angaben findest du am Drucker:\n• **IP-Adresse und Zugangscode:** Einstellungen → Netzwerk / WLAN (beim P1/A1/P2S im Menü „LAN-Modus“).\n• **Seriennummer:** Einstellungen → Geräteinfo, oder in Bambu Studio / Handy.\n\nTipp: Gib dem Drucker in deinem Router eine feste IP-Adresse.\n\n**Entwicklermodus** am Drucker einschalten (LAN-Modus → Entwicklermodus), sonst nimmt der Drucker keine Befehle an und Farbe/Profil können nicht gesendet werden.",
         "data": {
           "host": "IP-Adresse",
           "serial": "Seriennummer",
@@ -22,6 +23,37 @@
       "install_bambu": {
         "title": "Bambu-Lab-Integration fehlt",
         "description": "Die Verbindung zum Drucker übernimmt die Integration **Bambu Lab** (ha-bambulab). So installierst du sie:\n\n1. [Bambu Lab im Marketplace öffnen]({link}) → **Herunterladen**.\n2. Home Assistant **neu starten**.\n3. Diese Einrichtung erneut öffnen – danach gibst du nur noch IP, Seriennummer und Zugangscode ein."
+      },
+      "connect": {
+        "title": "Drucker verbinden",
+        "description": "Noch kein Bambu-Lab-Drucker gefunden. Wie soll der Drucker verbunden werden?\n\n✅ **Lokal (LAN) mit Entwicklermodus** ist der empfohlene Weg: Nur so kann der Filament Manager Farbe, Profil und Temperaturen an das AMS senden.",
+        "menu_options": {
+          "printer": "Lokal (LAN): IP, Seriennummer, Zugangscode – empfohlen, alles verfügbar",
+          "cloud": "Bambu-Cloud: Konto-Anmeldung – nur lesen, kein Senden an den Drucker"
+        }
+      },
+      "cloud": {
+        "title": "Bambu-Cloud",
+        "description": "⚠️ **Hinweis:** Über die Cloud kann der Filament Manager bei aktueller Bambu-Firmware **nur lesen** (Slots, Farben, Fortschritt, Verbrauch). **Farbe, Filament-Profil und Temperaturen an den Drucker senden geht nur im lokalen LAN-Modus mit aktiviertem Entwicklermodus.** In der Cloud verknüpfst du Rollen nur mit dem Slot und stellst Farbe/Profil am Drucker oder in Bambu Handy ein.\n\nMelde dich mit deinem Bambu-Lab-Konto an. Danach kommt meist ein Code per Mail.",
+        "data": {
+          "region": "Konto-Region",
+          "email": "E-Mail",
+          "password": "Passwort"
+        }
+      },
+      "cloud_code": {
+        "title": "Bestätigungscode",
+        "description": "Bambu hat dir einen Code geschickt ({where}). Gib ihn hier ein. Kein Code angekommen? Haken bei „Neuen Code anfordern“ setzen und absenden.",
+        "data": {
+          "code": "Code",
+          "new_code": "Neuen Code anfordern"
+        }
+      },
+      "cloud_printer": {
+        "title": "Drucker wählen",
+        "data": {
+          "serial": "Drucker"
+        }
       }
     },
     "abort": {
@@ -36,7 +68,24 @@
       "cannot_connect_local_incorrect_address": "Verbindung abgelehnt – stimmt die IP-Adresse?",
       "cannot_connect_local_address_unreachable": "Die IP-Adresse ist nicht erreichbar.",
       "cannot_connect_local_unknown": "Verbindung fehlgeschlagen (unbekannter Fehler).",
-      "bambu_flow_unexpected": "Die Bambu-Lab-Integration hat unerwartet geantwortet. Bitte den Drucker direkt in Bambu Lab einrichten."
+      "bambu_flow_unexpected": "Die Bambu-Lab-Integration hat unerwartet geantwortet. Bitte den Drucker direkt in Bambu Lab einrichten.",
+      "cannot_connect": "Anmeldung fehlgeschlagen – E-Mail und Passwort prüfen.",
+      "code_needed": "Bitte den Code eingeben.",
+      "code_expired": "Der Code ist abgelaufen – ein neuer wurde angefordert, bitte Mail prüfen.",
+      "code_incorrect": "Der Code ist falsch.",
+      "verifyCode": "Bitte den Code aus der Bambu-Mail eingeben.",
+      "tfaCode": "Bitte den Code aus deiner 2FA-App eingeben.",
+      "tfa_csrf_fallback": "Bambu hat stattdessen einen Code per Mail geschickt – bitte diesen eingeben.",
+      "cannot_connect_cloud_timeout": "Die Bambu-Cloud antwortet nicht.",
+      "cannot_connect_cloud_access_denied": "Die Bambu-Cloud verweigert den Zugriff.",
+      "cannot_connect_cloud_connection_refused": "Die Bambu-Cloud lehnt die Verbindung ab.",
+      "cannot_connect_cloud_address_unreachable": "Die Bambu-Cloud ist nicht erreichbar.",
+      "cannot_connect_cloud_unknown": "Unbekannter Fehler bei der Bambu-Cloud.",
+      "bambu_no_printers": "In diesem Bambu-Konto wurde kein Drucker gefunden.",
+      "bambu_cloudflare": "Cloudflare hat die Anmeldung blockiert – später erneut versuchen.",
+      "bambu_curl_unavailable": "Der Bambu-Lab-Integration fehlt ein Paket (curl_cffi) – Bambu Lab aktualisieren.",
+      "bambu_aborted": "Die Bambu-Lab-Einrichtung wurde abgebrochen.",
+      "bambu_already_configured": "Dieser Drucker ist schon eingerichtet."
     }
   },
   "options": {
@@ -45,7 +94,8 @@
         "title": "Bambu Filament Manager",
         "menu_options": {
           "settings": "Einstellungen (Nachrichten, Gewichte, NFC)",
-          "printer": "Drucker hinzufügen"
+          "printer": "Drucker hinzufügen – lokal (LAN): IP, Seriennummer, Zugangscode – empfohlen, alles verfügbar",
+          "cloud": "Drucker hinzufügen – Bambu-Cloud (nur lesen)"
         }
       },
       "settings": {
@@ -70,11 +120,34 @@
       },
       "printer": {
         "title": "Drucker verbinden",
-        "description": "Die Angaben findest du am Drucker:\n• **IP-Adresse und Zugangscode:** Einstellungen → Netzwerk / WLAN (beim P1/A1/P2S im Menü „LAN-Modus“).\n• **Seriennummer:** Einstellungen → Geräteinfo, oder in Bambu Studio / Handy.\n\nTipp: Gib dem Drucker in deinem Router eine feste IP-Adresse.",
+        "description": "Die Angaben findest du am Drucker:\n• **IP-Adresse und Zugangscode:** Einstellungen → Netzwerk / WLAN (beim P1/A1/P2S im Menü „LAN-Modus“).\n• **Seriennummer:** Einstellungen → Geräteinfo, oder in Bambu Studio / Handy.\n\nTipp: Gib dem Drucker in deinem Router eine feste IP-Adresse.\n\n**Entwicklermodus** am Drucker einschalten (LAN-Modus → Entwicklermodus), sonst nimmt der Drucker keine Befehle an und Farbe/Profil können nicht gesendet werden.",
         "data": {
           "host": "IP-Adresse",
           "serial": "Seriennummer",
           "access_code": "Zugangscode (Access Code)"
+        }
+      },
+      "cloud": {
+        "title": "Bambu-Cloud",
+        "description": "⚠️ **Hinweis:** Über die Cloud kann der Filament Manager bei aktueller Bambu-Firmware **nur lesen** (Slots, Farben, Fortschritt, Verbrauch). **Farbe, Filament-Profil und Temperaturen an den Drucker senden geht nur im lokalen LAN-Modus mit aktiviertem Entwicklermodus.** In der Cloud verknüpfst du Rollen nur mit dem Slot und stellst Farbe/Profil am Drucker oder in Bambu Handy ein.\n\nMelde dich mit deinem Bambu-Lab-Konto an. Danach kommt meist ein Code per Mail.",
+        "data": {
+          "region": "Konto-Region",
+          "email": "E-Mail",
+          "password": "Passwort"
+        }
+      },
+      "cloud_code": {
+        "title": "Bestätigungscode",
+        "description": "Bambu hat dir einen Code geschickt ({where}). Gib ihn hier ein. Kein Code angekommen? Haken bei „Neuen Code anfordern“ setzen und absenden.",
+        "data": {
+          "code": "Code",
+          "new_code": "Neuen Code anfordern"
+        }
+      },
+      "cloud_printer": {
+        "title": "Drucker wählen",
+        "data": {
+          "serial": "Drucker"
         }
       }
     },
@@ -87,7 +160,24 @@
       "cannot_connect_local_incorrect_address": "Verbindung abgelehnt – stimmt die IP-Adresse?",
       "cannot_connect_local_address_unreachable": "Die IP-Adresse ist nicht erreichbar.",
       "cannot_connect_local_unknown": "Verbindung fehlgeschlagen (unbekannter Fehler).",
-      "bambu_flow_unexpected": "Die Bambu-Lab-Integration hat unerwartet geantwortet. Bitte den Drucker direkt in Bambu Lab einrichten."
+      "bambu_flow_unexpected": "Die Bambu-Lab-Integration hat unerwartet geantwortet. Bitte den Drucker direkt in Bambu Lab einrichten.",
+      "cannot_connect": "Anmeldung fehlgeschlagen – E-Mail und Passwort prüfen.",
+      "code_needed": "Bitte den Code eingeben.",
+      "code_expired": "Der Code ist abgelaufen – ein neuer wurde angefordert, bitte Mail prüfen.",
+      "code_incorrect": "Der Code ist falsch.",
+      "verifyCode": "Bitte den Code aus der Bambu-Mail eingeben.",
+      "tfaCode": "Bitte den Code aus deiner 2FA-App eingeben.",
+      "tfa_csrf_fallback": "Bambu hat stattdessen einen Code per Mail geschickt – bitte diesen eingeben.",
+      "cannot_connect_cloud_timeout": "Die Bambu-Cloud antwortet nicht.",
+      "cannot_connect_cloud_access_denied": "Die Bambu-Cloud verweigert den Zugriff.",
+      "cannot_connect_cloud_connection_refused": "Die Bambu-Cloud lehnt die Verbindung ab.",
+      "cannot_connect_cloud_address_unreachable": "Die Bambu-Cloud ist nicht erreichbar.",
+      "cannot_connect_cloud_unknown": "Unbekannter Fehler bei der Bambu-Cloud.",
+      "bambu_no_printers": "In diesem Bambu-Konto wurde kein Drucker gefunden.",
+      "bambu_cloudflare": "Cloudflare hat die Anmeldung blockiert – später erneut versuchen.",
+      "bambu_curl_unavailable": "Der Bambu-Lab-Integration fehlt ein Paket (curl_cffi) – Bambu Lab aktualisieren.",
+      "bambu_aborted": "Die Bambu-Lab-Einrichtung wurde abgebrochen.",
+      "bambu_already_configured": "Dieser Drucker ist schon eingerichtet."
     }
   },
   "entity": {
@@ -271,6 +361,17 @@
     "list_spools": {
       "name": "Rollen auflisten",
       "description": "Liefert alle Rollen mit Slot."
+    }
+  },
+  "selector": {
+    "region": {
+      "options": {
+        "Europe": "Europa",
+        "NorthAmerica": "Nordamerika",
+        "AsiaPacific": "Asien-Pazifik",
+        "China": "China",
+        "Other": "Andere"
+      }
     }
   }
 }

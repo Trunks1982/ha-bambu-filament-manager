@@ -219,6 +219,18 @@ class FilamentManager:
                 return p
         return None
 
+    def can_control(self, printer: Printer) -> bool:
+        """False if the printer firmware blocks commands from HA.
+
+        Current Bambu firmware only accepts commands (filament, temperatures) in developer
+        LAN mode. ha-bambulab then drops them silently, so we must not assume they worked.
+        """
+        eid = printer.entities.get("developer_lan_mode")
+        if not eid:
+            return True  # older firmware without the lock
+        st = self.hass.states.get(eid)
+        return st is None or st.state != "off"
+
     def find_tray(self, entity_id: str) -> tuple[Printer, Tray] | None:
         for p in self.printers:
             for tr in p.trays:
@@ -308,10 +320,25 @@ class FilamentManager:
     def notify_choices(self) -> dict[str, str]:
         """All notification targets available in this Home Assistant."""
         out: dict[str, str] = {"persistent": "Home Assistant (" + t(self.lang, "persistent") + ")"}
+        ent_reg = er.async_get(self.hass)
+        from homeassistant.helpers import device_registry as dr  # noqa: PLC0415
+        from homeassistant.util import slugify  # noqa: PLC0415
+
+        dev_reg = dr.async_get(self.hass)
+        covered: set[str] = set()  # legacy services that have a notify entity for the same phone
         for state in self.hass.states.async_all("notify"):
             out[f"entity:{state.entity_id}"] = f"{state.name} ({state.entity_id})"
+            reg = ent_reg.async_get(state.entity_id)
+            if reg and reg.platform == "mobile_app" and reg.device_id:
+                dev = dev_reg.async_get(reg.device_id)
+                if dev:
+                    covered.add(f"mobile_app_{slugify(dev.name_by_user or dev.name or '')}")
+                    covered.add(f"mobile_app_{slugify(dev.name or '')}")
+        selected = set(self.options.get(CONF_NOTIFY_TARGETS, []))
         for svc in sorted(self.hass.services.async_services_for_domain("notify")):
             if svc in ("send_message", "persistent_notification", "notify"):
+                continue
+            if svc in covered and f"service:{svc}" not in selected:
                 continue
             out[f"service:{svc}"] = f"notify.{svc}"
         return out
@@ -497,9 +524,17 @@ class FilamentManager:
             raise ServiceValidationError(t(self.lang, "err_tray_active"))
         if self._bambu_uuid(attrs):
             raise ServiceValidationError(t(self.lang, "err_bambu_spool"))
-        if not spool.get("filament_id"):
+        if send and not spool.get("filament_id"):
             raise ServiceValidationError(t(self.lang, "err_no_profile"))
         color = norm_color(spool.get("color"))
+        filament_id = spool.get("filament_id") or ""
+        if send and not self.can_control(printer):
+            send = False
+        if not send and not attrs.get("empty"):
+            # Only link: remember what the tray shows now, so the link stays valid until the
+            # filament in the slot is changed on the printer.
+            color = norm_color(attrs.get("color"))
+            filament_id = str(attrs.get("filament_id") or "")
         if send:
             try:
                 await self.hass.services.async_call(
@@ -524,7 +559,8 @@ class FilamentManager:
         self.assign[tray.unique_id] = {
             "spool": spool_id,
             "color": color,
-            "filament_id": spool["filament_id"],
+            "filament_id": filament_id,
+            "sent": send,
             "since": dt_util.utcnow().isoformat(),
         }
         if self.pending == spool_id:
@@ -801,6 +837,7 @@ class FilamentManager:
         for p in self.printers:
             d = p.as_dict()
             d["image"] = self.printer_image(p.model)
+            d["can_control"] = self.can_control(p)
             d["job"] = self.jobs.get(p.device_id)
             for u in d["units"]:
                 for tr in u["trays"]:

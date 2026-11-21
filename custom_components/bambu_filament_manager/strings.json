@@ -7,12 +7,13 @@
         "description": "Printers found: {printers}.\n\nFinish the setup or add another printer?",
         "menu_options": {
           "finish": "Finish setup",
-          "printer": "Add another printer"
+          "printer": "Add another printer – local (LAN)",
+          "cloud": "Add another printer – Bambu cloud (read only)"
         }
       },
       "printer": {
         "title": "Connect printer",
-        "description": "You find these on the printer:\n• **IP address and access code:** Settings → Network / WLAN (on P1/A1/P2S in the “LAN mode” menu).\n• **Serial number:** Settings → device info, or in Bambu Studio / Handy.\n\nTip: give the printer a fixed IP address in your router.",
+        "description": "You find these on the printer:\n• **IP address and access code:** Settings → Network / WLAN (on P1/A1/P2S in the “LAN mode” menu).\n• **Serial number:** Settings → device info, or in Bambu Studio / Handy.\n\nTip: give the printer a fixed IP address in your router.\n\nTurn on **developer mode** on the printer (LAN mode → developer mode), otherwise the printer does not accept commands and color/profile cannot be sent.",
         "data": {
           "host": "IP address",
           "serial": "Serial number",
@@ -22,6 +23,37 @@
       "install_bambu": {
         "title": "Bambu Lab integration missing",
         "description": "The printer connection is handled by the **Bambu Lab** integration (ha-bambulab). To install it:\n\n1. [Open Bambu Lab in the Marketplace]({link}) → **Download**.\n2. **Restart** Home Assistant.\n3. Open this setup again – then you only enter IP, serial number and access code."
+      },
+      "connect": {
+        "title": "Connect printer",
+        "description": "No Bambu Lab printer found yet. How should the printer be connected?\n\n✅ **Local (LAN) with developer mode** is the recommended way: only then can the Filament Manager send color, profile and temperatures to the AMS.",
+        "menu_options": {
+          "printer": "Local (LAN): IP, serial number, access code – recommended, everything available",
+          "cloud": "Bambu cloud: account login – read only, no sending to the printer"
+        }
+      },
+      "cloud": {
+        "title": "Bambu cloud",
+        "description": "⚠️ **Note:** Through the cloud the Filament Manager can **only read** on current Bambu firmware (slots, colors, progress, usage). **Sending color, filament profile and temperatures to the printer only works in local LAN mode with developer mode enabled.** With the cloud you only link spools to slots and set color/profile on the printer or in Bambu Handy.\n\nSign in with your Bambu Lab account. Usually a code is sent by email afterwards.",
+        "data": {
+          "region": "Account region",
+          "email": "E-Mail",
+          "password": "Password"
+        }
+      },
+      "cloud_code": {
+        "title": "Verification code",
+        "description": "Bambu sent you a code ({where}). Enter it here. No code? Tick “Request a new code” and submit.",
+        "data": {
+          "code": "Code",
+          "new_code": "Request a new code"
+        }
+      },
+      "cloud_printer": {
+        "title": "Choose printer",
+        "data": {
+          "serial": "Printer"
+        }
       }
     },
     "abort": {
@@ -36,7 +68,24 @@
       "cannot_connect_local_incorrect_address": "Connection refused – is the IP address right?",
       "cannot_connect_local_address_unreachable": "The IP address cannot be reached.",
       "cannot_connect_local_unknown": "Connection failed (unknown error).",
-      "bambu_flow_unexpected": "The Bambu Lab integration answered unexpectedly. Please add the printer directly in Bambu Lab."
+      "bambu_flow_unexpected": "The Bambu Lab integration answered unexpectedly. Please add the printer directly in Bambu Lab.",
+      "cannot_connect": "Login failed – check email and password.",
+      "code_needed": "Please enter the code.",
+      "code_expired": "The code has expired – a new one was requested, check your email.",
+      "code_incorrect": "The code is wrong.",
+      "verifyCode": "Please enter the code from the Bambu email.",
+      "tfaCode": "Please enter the code from your 2FA app.",
+      "tfa_csrf_fallback": "Bambu sent a code by email instead – please enter it.",
+      "cannot_connect_cloud_timeout": "The Bambu cloud does not answer.",
+      "cannot_connect_cloud_access_denied": "The Bambu cloud denies access.",
+      "cannot_connect_cloud_connection_refused": "The Bambu cloud refuses the connection.",
+      "cannot_connect_cloud_address_unreachable": "The Bambu cloud cannot be reached.",
+      "cannot_connect_cloud_unknown": "Unknown error with the Bambu cloud.",
+      "bambu_no_printers": "No printer found in this Bambu account.",
+      "bambu_cloudflare": "Cloudflare blocked the login – try again later.",
+      "bambu_curl_unavailable": "The Bambu Lab integration is missing a package (curl_cffi) – update Bambu Lab.",
+      "bambu_aborted": "The Bambu Lab setup was aborted.",
+      "bambu_already_configured": "This printer is already set up."
     }
   },
   "options": {
@@ -45,7 +94,8 @@
         "title": "Bambu Filament Manager",
         "menu_options": {
           "settings": "Settings (messages, weights, NFC)",
-          "printer": "Add printer"
+          "printer": "Add printer – local (LAN), recommended",
+          "cloud": "Add printer – Bambu cloud (read only)"
         }
       },
       "settings": {
@@ -70,11 +120,34 @@
       },
       "printer": {
         "title": "Connect printer",
-        "description": "You find these on the printer:\n• **IP address and access code:** Settings → Network / WLAN (on P1/A1/P2S in the “LAN mode” menu).\n• **Serial number:** Settings → device info, or in Bambu Studio / Handy.\n\nTip: give the printer a fixed IP address in your router.",
+        "description": "You find these on the printer:\n• **IP address and access code:** Settings → Network / WLAN (on P1/A1/P2S in the “LAN mode” menu).\n• **Serial number:** Settings → device info, or in Bambu Studio / Handy.\n\nTip: give the printer a fixed IP address in your router.\n\nTurn on **developer mode** on the printer (LAN mode → developer mode), otherwise the printer does not accept commands and color/profile cannot be sent.",
         "data": {
           "host": "IP address",
           "serial": "Serial number",
           "access_code": "Access code"
+        }
+      },
+      "cloud": {
+        "title": "Bambu cloud",
+        "description": "⚠️ **Note:** Through the cloud the Filament Manager can **only read** on current Bambu firmware (slots, colors, progress, usage). **Sending color, filament profile and temperatures to the printer only works in local LAN mode with developer mode enabled.** With the cloud you only link spools to slots and set color/profile on the printer or in Bambu Handy.\n\nSign in with your Bambu Lab account. Usually a code is sent by email afterwards.",
+        "data": {
+          "region": "Account region",
+          "email": "E-Mail",
+          "password": "Password"
+        }
+      },
+      "cloud_code": {
+        "title": "Verification code",
+        "description": "Bambu sent you a code ({where}). Enter it here. No code? Tick “Request a new code” and submit.",
+        "data": {
+          "code": "Code",
+          "new_code": "Request a new code"
+        }
+      },
+      "cloud_printer": {
+        "title": "Choose printer",
+        "data": {
+          "serial": "Printer"
         }
       }
     },
@@ -87,7 +160,24 @@
       "cannot_connect_local_incorrect_address": "Connection refused – is the IP address right?",
       "cannot_connect_local_address_unreachable": "The IP address cannot be reached.",
       "cannot_connect_local_unknown": "Connection failed (unknown error).",
-      "bambu_flow_unexpected": "The Bambu Lab integration answered unexpectedly. Please add the printer directly in Bambu Lab."
+      "bambu_flow_unexpected": "The Bambu Lab integration answered unexpectedly. Please add the printer directly in Bambu Lab.",
+      "cannot_connect": "Login failed – check email and password.",
+      "code_needed": "Please enter the code.",
+      "code_expired": "The code has expired – a new one was requested, check your email.",
+      "code_incorrect": "The code is wrong.",
+      "verifyCode": "Please enter the code from the Bambu email.",
+      "tfaCode": "Please enter the code from your 2FA app.",
+      "tfa_csrf_fallback": "Bambu sent a code by email instead – please enter it.",
+      "cannot_connect_cloud_timeout": "The Bambu cloud does not answer.",
+      "cannot_connect_cloud_access_denied": "The Bambu cloud denies access.",
+      "cannot_connect_cloud_connection_refused": "The Bambu cloud refuses the connection.",
+      "cannot_connect_cloud_address_unreachable": "The Bambu cloud cannot be reached.",
+      "cannot_connect_cloud_unknown": "Unknown error with the Bambu cloud.",
+      "bambu_no_printers": "No printer found in this Bambu account.",
+      "bambu_cloudflare": "Cloudflare blocked the login – try again later.",
+      "bambu_curl_unavailable": "The Bambu Lab integration is missing a package (curl_cffi) – update Bambu Lab.",
+      "bambu_aborted": "The Bambu Lab setup was aborted.",
+      "bambu_already_configured": "This printer is already set up."
     }
   },
   "entity": {
@@ -271,6 +361,17 @@
     "list_spools": {
       "name": "List spools",
       "description": "Returns all spools with their slot."
+    }
+  },
+  "selector": {
+    "region": {
+      "options": {
+        "Europe": "Europe",
+        "NorthAmerica": "North America",
+        "AsiaPacific": "Asia Pacific",
+        "China": "China",
+        "Other": "Other"
+      }
     }
   }
 }

@@ -24,7 +24,14 @@ from .const import (
     DOMAIN,
 )
 from .printer import discover
-from .printer_setup import BAMBU_REPOSITORY_ID, add_lan_printer, bambu_installed, serial_configured
+from .printer_setup import (
+    BAMBU_REPOSITORY_ID,
+    REGIONS,
+    CloudSession,
+    add_lan_printer,
+    bambu_installed,
+    serial_configured,
+)
 
 PRINTER_SCHEMA = {
     vol.Required("host"): selector.TextSelector(),
@@ -56,7 +63,97 @@ async def _printer_step(flow, step_id: str, user_input: dict[str, Any] | None, o
     return flow.async_show_form(step_id=step_id, data_schema=schema, errors=errors)
 
 
-class FilamentManagerConfigFlow(ConfigFlow, domain=DOMAIN):
+class CloudSteps:
+    """Bambu Cloud login (email, password, code, printer) – shared by config and options flow."""
+
+    _cloud: CloudSession | None = None
+    _cloud_printers: list[tuple[str, str]] = []
+
+    async def _printer_added(self) -> ConfigFlowResult:  # pragma: no cover - overridden
+        raise NotImplementedError
+
+    def _cloud_next(self, state: dict[str, Any]):
+        kind = state["kind"]
+        if kind == "done":
+            return self._printer_added()
+        if kind == "code":
+            return self._show_cloud_code(state.get("error"), state.get("tfa", False))
+        if kind == "choose":
+            self._cloud_printers = state["printers"]
+            return self._show_cloud_printer()
+        if kind == "abort":
+            return None, state["reason"]
+        return None, state.get("error") or "cannot_connect"
+
+    async def async_step_cloud(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            self._cloud = self._cloud or CloudSession(self.hass)
+            state = await self._cloud.login(user_input["region"], user_input["email"], user_input["password"])
+            nxt = self._cloud_next(state)
+            if not isinstance(nxt, tuple):
+                return await nxt if hasattr(nxt, "__await__") else nxt
+            errors["base"] = nxt[1]
+        schema = vol.Schema({
+            vol.Required("region", default="Europe"): selector.SelectSelector(
+                selector.SelectSelectorConfig(options=REGIONS, translation_key="region",
+                                              mode=selector.SelectSelectorMode.DROPDOWN)),
+            vol.Required("email"): selector.TextSelector(selector.TextSelectorConfig(type=selector.TextSelectorType.EMAIL)),
+            vol.Required("password"): selector.TextSelector(selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)),
+        })
+        if user_input is not None:
+            schema = self.add_suggested_values_to_schema(
+                schema, {"region": user_input.get("region"), "email": user_input.get("email")})
+        return self.async_show_form(step_id="cloud", data_schema=schema, errors=errors)
+
+    def _show_cloud_code(self, error: str | None, tfa: bool) -> ConfigFlowResult:
+        return self.async_show_form(
+            step_id="cloud_code",
+            data_schema=vol.Schema({
+                vol.Optional("code", default=""): selector.TextSelector(),
+                vol.Optional("new_code", default=False): selector.BooleanSelector(),
+            }),
+            errors={"base": error} if error else {},
+            description_placeholders={"where": "2FA" if tfa else "E-Mail"},
+        )
+
+    async def async_step_cloud_code(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        if user_input is None or self._cloud is None:
+            return self._show_cloud_code(None, False)
+        if not user_input.get("new_code") and not str(user_input.get("code", "")).strip():
+            return self._show_cloud_code("code_needed", self._cloud.code_key == "tfaCode")
+        state = await self._cloud.send_code(str(user_input.get("code", "")), bool(user_input.get("new_code")))
+        nxt = self._cloud_next(state)
+        if isinstance(nxt, tuple):
+            return self._show_cloud_code(nxt[1], self._cloud.code_key == "tfaCode")
+        return await nxt if hasattr(nxt, "__await__") else nxt
+
+    def _show_cloud_printer(self, error: str | None = None) -> ConfigFlowResult:
+        options = [selector.SelectOptionDict(value=v, label=lbl) for v, lbl in self._cloud_printers]
+        return self.async_show_form(
+            step_id="cloud_printer",
+            data_schema=vol.Schema({vol.Required("serial"): selector.SelectSelector(
+                selector.SelectSelectorConfig(options=options, mode=selector.SelectSelectorMode.LIST))}),
+            errors={"base": error} if error else {},
+        )
+
+    async def async_step_cloud_printer(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        if user_input is None or self._cloud is None:
+            return self._show_cloud_printer()
+        if serial_configured(self.hass, user_input["serial"]):
+            return self._show_cloud_printer("printer_already_configured")
+        state = await self._cloud.choose(user_input["serial"])
+        nxt = self._cloud_next(state)
+        if isinstance(nxt, tuple):
+            return self._show_cloud_printer(nxt[1])
+        return await nxt if hasattr(nxt, "__await__") else nxt
+
+    def async_remove(self) -> None:
+        if self._cloud is not None:
+            self._cloud.abort()
+
+
+class FilamentManagerConfigFlow(CloudSteps, ConfigFlow, domain=DOMAIN):
     """Single-click setup."""
 
     VERSION = 1
@@ -66,12 +163,16 @@ class FilamentManagerConfigFlow(ConfigFlow, domain=DOMAIN):
             return await self.async_step_install_bambu()
         printers = discover(self.hass)
         if not printers:
-            return await self.async_step_printer()
+            return await self.async_step_connect()
         return self.async_show_menu(
             step_id="user",
-            menu_options=["finish", "printer"],
+            menu_options=["finish", "printer", "cloud"],
             description_placeholders={"printers": ", ".join(p.name for p in printers)},
         )
+
+    async def async_step_connect(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        """No printer yet: local (LAN) or Bambu Cloud?"""
+        return self.async_show_menu(step_id="connect", menu_options=["printer", "cloud"])
 
     async def async_step_install_bambu(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """ha-bambulab provides the printer connection – it has to be installed first."""
@@ -93,17 +194,23 @@ class FilamentManagerConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_finish(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         return self.async_create_entry(title="Bambu Filament Manager", data={}, options=dict(DEFAULTS))
 
+    async def _printer_added(self) -> ConfigFlowResult:
+        return await self.async_step_finish()
+
     @staticmethod
     @callback
     def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
         return FilamentManagerOptionsFlow()
 
 
-class FilamentManagerOptionsFlow(OptionsFlow):
-    """Notifications and defaults."""
+class FilamentManagerOptionsFlow(CloudSteps, OptionsFlow):
+    """Notifications, defaults and adding printers."""
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
-        return self.async_show_menu(step_id="init", menu_options=["settings", "printer"])
+        return self.async_show_menu(step_id="init", menu_options=["settings", "printer", "cloud"])
+
+    async def _printer_added(self) -> ConfigFlowResult:
+        return self.async_create_entry(data=dict(self.config_entry.options))
 
     async def async_step_printer(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         async def done() -> ConfigFlowResult:

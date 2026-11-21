@@ -15,7 +15,7 @@ One setup dialog for printer and filament – the printer connection runs throug
 ## Features
 - **AMS card like the original**: spools in their real colors with the remaining amount, active slot, humidity/temperature, external spool, AMS HT. Printer picture, cover image of the print, progress, layer, remaining time, temperatures, optional camera.
 - **Spool inventory**: name, vendor, Bambu filament profile (catalog), color, nozzle temperatures, empty spool weight, remaining grams. Weighing: enter what the scale shows, the empty spool is subtracted.
-- **Load into a slot** with one tap – profile, color and temperatures are sent to the AMS.
+- **Load into a slot** with one tap – profile, color and temperatures are sent to the AMS (LAN developer mode, see below).
 - **NFC**: scan a sticker with the HA app → the spool is selected, tap a slot to load it. Unknown sticker → the card offers to create a new spool with it.
 - **Live usage**: while printing, the grams are subtracted proportionally to the print progress. Cancelled prints only count the printed part. Survives restarts without double counting.
 - **Warnings**: “not enough filament for this print” at print start, “almost empty” after the print.
@@ -23,10 +23,15 @@ One setup dialog for printer and filament – the printer connection runs throug
 - **Original Bambu spools (RFID)** are added automatically; the AMS reports their rest.
 - Sensors per spool and per slot, events, and actions (`bambu_filament_manager.add_spool`, `assign_spool`, `weigh_spool`, …) for your own automations.
 
+
+> [!IMPORTANT]
+> **Everything is only available in local LAN mode with developer mode enabled.**
+> Current Bambu firmware only accepts commands from Home Assistant in developer mode. Without it (and always via the Bambu Cloud) the Filament Manager can **read** everything – slots, colors, progress, usage, warnings – but it cannot **send** color, filament profile and temperatures to the AMS. Spools are then only linked to the slot, and you set color/profile on the printer or in Bambu Handy. The card shows a note when this applies.
+
 ## Installation
 1. Marketplace (or HACS) → ⋮ → Custom repositories → add `Trunks1982/ha-bambu-filament-manager` (type *Integration*) → download → restart Home Assistant.
 2. Settings → Devices & services → Add integration → **Bambu Filament Manager**.
-3. Enter the printer's **IP address, serial number and access code** (shown on the printer screen). The printer connection itself is set up in the background in the [Bambu Lab integration (ha-bambulab)](https://github.com/greghesp/ha-bambulab), so it keeps getting their updates for new printers and firmware. If ha-bambulab is not installed yet, the dialog links to it.
+3. Choose how the printer is connected – **local (LAN)** with IP address, serial number and access code, or **Bambu Cloud** with your Bambu account (email, password, code from the Bambu email). The printer connection itself is set up in the background in the [Bambu Lab integration (ha-bambulab)](https://github.com/greghesp/ha-bambulab), so it keeps getting their updates for new printers and firmware. If ha-bambulab is not installed yet, the dialog links to it.
    Already have a printer in ha-bambulab? Then it is found automatically – nothing to enter.
 4. More printers: integration → *Configure* → *Add printer*.
 
