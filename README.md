@@ -4,6 +4,14 @@ Spool inventory for Bambu Lab printers in Home Assistant – with an AMS card th
 
 One setup dialog for printer and filament – the printer connection runs through the [Bambu Lab integration (ha-bambulab)](https://github.com/greghesp/ha-bambulab) in the background. No helpers, scripts or automations needed.
 
+
+<p align="center">
+  <img src="docs/card.png" width="24%" alt="AMS card while printing">
+  <img src="docs/slot-dialog.png" width="24%" alt="Choose a spool for a slot">
+  <img src="docs/new-spool.png" width="24%" alt="New spool with scale and color">
+  <img src="docs/card-dark-spools.png" width="24%" alt="Dark theme with spool list">
+</p>
+
 ## Features
 - **AMS card like the original**: spools in their real colors with the remaining amount, active slot, humidity/temperature, external spool, AMS HT. Printer picture, cover image of the print, progress, layer, remaining time, temperatures, optional camera.
 - **Spool inventory**: name, vendor, Bambu filament profile (catalog), color, nozzle temperatures, empty spool weight, remaining grams. Weighing: enter what the scale shows, the empty spool is subtracted.
