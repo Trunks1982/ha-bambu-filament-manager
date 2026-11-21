@@ -46,6 +46,7 @@ assign_spool:
   fields:
     tray: {required: true, selector: {entity: {integration: bambu_lab, domain: sensor}}}
     spool_id: {selector: {text: {}}}
+    send: {default: true, selector: {boolean: {}}}
 unassign_tray:
   fields:
     tray: {required: true, selector: {entity: {integration: bambu_lab, domain: sensor}}}

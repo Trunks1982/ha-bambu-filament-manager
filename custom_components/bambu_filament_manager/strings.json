@@ -33,7 +33,7 @@
           "ignored_tags": "Ignore NFC stickers"
         },
         "data_description": {
-          "ignored_tags": "Stickers that have a name in HA are ignored anyway (e.g. a door).",
+          "ignored_tags": "Stickers you named yourself in HA are ignored anyway. Add automatically named ones (“Tag …”) here if they belong to something else (e.g. a door).",
           "default_spool_weight": "Used to compute the rest when weighing (scale shows filament + spool)."
         }
       }
@@ -188,6 +188,10 @@
         },
         "tray": {
           "name": "AMS slot"
+        },
+        "send": {
+          "name": "Send to printer",
+          "description": "Off = only link (when the slot is already set correctly)."
         }
       }
     },

@@ -552,7 +552,8 @@ class FilamentManager:
                     msg += "\n" + t(self.lang, "scan_loc", tray=loc["tray"])
                 await self.async_notify(t(self.lang, "scan_title", name=spool["name"]), msg)
             return
-        # Tags with a name in HA belong to something else (door, light ...) unless unnamed.
+        # Tags the user gave a real name belong to something else (door, light ...).
+        # The companion app names new tags "Tag <id>" by itself – those still count as unknown.
         try:
             from homeassistant.components.tag import TAG_DATA  # noqa: PLC0415
 
@@ -560,7 +561,8 @@ class FilamentManager:
             info = coll.data.get(tag_id) if coll is not None else None
         except Exception:  # noqa: BLE001
             info = None
-        if info and info.get("name"):
+        name = str((info or {}).get("name") or "").strip()
+        if name and name not in (tag_id, f"Tag {tag_id}"):
             return
         self.unknown_tag = tag_id
         await self._changed()

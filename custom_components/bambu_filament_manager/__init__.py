@@ -112,7 +112,7 @@ def _register_services(hass: HomeAssistant) -> None:
         return {"spool": spool}
 
     async def assign_spool(call: ServiceCall) -> None:
-        await _manager(hass).async_assign(call.data["tray"], call.data.get("spool_id"))
+        await _manager(hass).async_assign(call.data["tray"], call.data.get("spool_id"), call.data.get("send", True))
 
     async def unassign_tray(call: ServiceCall) -> None:
         await _manager(hass).async_unassign(call.data["tray"])
@@ -148,7 +148,8 @@ def _register_services(hass: HomeAssistant) -> None:
                                  vol.Schema({spool_id: cv.string, vol.Required("grams"): vol.Coerce(float)}),
                                  supports_response=SupportsResponse.OPTIONAL)
     hass.services.async_register(DOMAIN, "assign_spool", assign_spool,
-                                 vol.Schema({tray: cv.entity_id, vol.Optional("spool_id"): cv.string}))
+                                 vol.Schema({tray: cv.entity_id, vol.Optional("spool_id"): cv.string,
+                                             vol.Optional("send", default=True): cv.boolean}))
     hass.services.async_register(DOMAIN, "unassign_tray", unassign_tray, vol.Schema({tray: cv.entity_id}))
     hass.services.async_register(DOMAIN, "select_spool", select_spool,
                                  vol.Schema({vol.Optional("spool_id"): vol.Any(None, cv.string)}))

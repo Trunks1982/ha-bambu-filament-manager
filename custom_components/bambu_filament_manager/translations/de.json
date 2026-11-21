@@ -33,7 +33,7 @@
           "ignored_tags": "NFC-Aufkleber ignorieren"
         },
         "data_description": {
-          "ignored_tags": "Aufkleber mit Namen in HA werden sowieso ignoriert (z. B. Tür).",
+          "ignored_tags": "Aufkleber, die du in HA selbst benannt hast, werden sowieso ignoriert. Automatisch benannte („Tag …“) hier eintragen, wenn sie zu etwas anderem gehören (z. B. Tür).",
           "default_spool_weight": "Zum Ausrechnen des Rests beim Wiegen (Waage zeigt Rolle + Spule)."
         }
       }
@@ -188,6 +188,10 @@
         },
         "tray": {
           "name": "AMS-Slot"
+        },
+        "send": {
+          "name": "An den Drucker senden",
+          "description": "Aus = nur verknüpfen (wenn der Slot schon richtig eingestellt ist)."
         }
       }
     },
