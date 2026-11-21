@@ -2,7 +2,7 @@
  * Shows printer status and the AMS like in Bambu Studio / Handy, and manages spools.
  * No build step, no external dependencies. */
 const DOMAIN = "bambu_filament_manager";
-const CARD_VERSION = "0.3.0";
+const CARD_VERSION = "0.3.1";
 
 const I18N = {
   en: {
@@ -112,7 +112,17 @@ class BambuFilamentCard extends HTMLElement {
     if (sig !== this._sig) { this._sig = sig; this._render(); }
   }
 
-  connectedCallback() { if (this._hass && !this._unsub) this._subscribe(); this._startCam(); }
+  connectedCallback() {
+    // Shown as preview in "Add card"? Then render a compact version.
+    let n = this, inPicker = false;
+    for (let i = 0; i < 40 && n; i++) {
+      if (n.localName === "hui-card-picker") { inPicker = true; break; }
+      n = n.parentNode || n.host || (n.getRootNode && n.getRootNode() !== n ? n.getRootNode().host : null);
+    }
+    if (inPicker !== !!this._inPicker) { this._inPicker = inPicker; this._sig = ""; if (this._hass) this._render(); }
+    if (this._hass && !this._unsub) this._subscribe();
+    this._startCam();
+  }
   disconnectedCallback() {
     if (this._unsub) { this._unsub.then((u) => u && u()).catch(() => {}); this._unsub = null; }
     clearInterval(this._camTimer); this._camTimer = null;
@@ -171,6 +181,12 @@ class BambuFilamentCard extends HTMLElement {
     const p = this._printer;
     if (!p) { main.innerHTML = `<div class="msg">${esc(t.no_printer)}</div>`; return; }
 
+    if (this._inPicker) {
+      const st = this._sv(p.entities.print_status) || "unknown";
+      main.innerHTML = `<div class="mini"><span>${esc(p.name)}</span><span class="chip s-${esc(st)}">${esc(this._t.status[st] || st)}</span></div>` +
+        this._amsHtml(p, true);
+      return;
+    }
     main.innerHTML = this._headHtml(p) + this._camHtml(p) + this._bannerHtml() + this._amsHtml(p) +
       (this._config.show_spools ? this._listHtml() : "");
     this._startCam();
@@ -255,12 +271,12 @@ class BambuFilamentCard extends HTMLElement {
     return { s, a, spool, emptyTray, pct, grams, colors };
   }
 
-  _amsHtml(p) {
+  _amsHtml(p, mini = false) {
     const t = this._t;
     const low = num(this._data.low_threshold, 100);
     const job = {};
     Object.entries(p.job?.weights || {}).forEach(([k, g]) => { job[k] = Math.max(0, g - num(p.job?.consumed?.[k])); });
-    return `<div class="units">${p.units.map((u) => {
+    return `<div class="units ${mini ? "minis" : ""}">${p.units.filter((u) => !mini || u.kind !== "external").map((u) => {
       const ue = u.entities;
       const hum = this._sv(ue.humidity), temp = this._sv(ue.ams_temp);
       const drying = this._sv(ue.drying) === "on";
@@ -612,7 +628,7 @@ const STYLE = `
 :host{--bfc-bg:var(--ha-card-background,var(--card-background-color,#1c1c1c));--bfc-panel:rgba(127,127,127,.12);--bfc-slot:rgba(127,127,127,.22);--bfc-accent:#00ae42;--bfc-text:var(--primary-text-color);--bfc-sub:var(--secondary-text-color)}
 ha-card{padding:14px;overflow:hidden}
 ha-icon{--mdc-icon-size:16px;vertical-align:-3px}
-.nw{white-space:nowrap}.msg{padding:12px;color:var(--bfc-sub);text-align:center}.msg.sm{padding:6px;font-size:.9em}
+.nw{white-space:nowrap}.mini{display:flex;align-items:center;gap:8px;font-weight:700}.minis{margin-top:8px}.minis .spool{height:64px}.minis .nm{display:none}.minis .ams-h .model{display:none}.msg{padding:12px;color:var(--bfc-sub);text-align:center}.msg.sm{padding:6px;font-size:.9em}
 .head{display:flex;gap:12px;align-items:center}
 .pimg{width:76px;height:76px;object-fit:contain;flex:none}.pimg.icon{--mdc-icon-size:56px;display:flex;align-items:center;justify-content:center;color:var(--bfc-sub)}
 .info{flex:1;min-width:0}
@@ -696,7 +712,7 @@ if (!customElements.get("bambu-filament-card")) {
     type: "bambu-filament-card",
     name: "Bambu Filament",
     description: "AMS like in Bambu Studio, spool inventory with NFC and usage tracking (Bambu Filament Manager).",
-    preview: false,
+    preview: true,
     documentationURL: "https://github.com/Trunks1982/ha-bambu-filament-manager",
   });
   console.info(`%c BAMBU-FILAMENT-CARD %c ${CARD_VERSION} `, "background:#00ae42;color:#fff;font-weight:700", "background:#333;color:#fff");
