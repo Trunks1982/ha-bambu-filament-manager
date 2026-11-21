@@ -24,6 +24,36 @@ from .const import (
     DOMAIN,
 )
 from .printer import discover
+from .printer_setup import BAMBU_REPOSITORY_ID, add_lan_printer, bambu_installed, serial_configured
+
+PRINTER_SCHEMA = {
+    vol.Required("host"): selector.TextSelector(),
+    vol.Required("serial"): selector.TextSelector(),
+    vol.Required("access_code"): selector.TextSelector(
+        selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)
+    ),
+}
+
+
+async def _printer_step(flow, step_id: str, user_input: dict[str, Any] | None, on_success):
+    """Shared form: IP, serial number, access code -> set up in Bambu Lab."""
+    errors: dict[str, str] = {}
+    if user_input is not None:
+        if serial_configured(flow.hass, user_input["serial"]):
+            errors["base"] = "printer_already_configured"
+        else:
+            ok, err = await add_lan_printer(
+                flow.hass, user_input["host"], user_input["serial"], user_input["access_code"]
+            )
+            if ok:
+                return await on_success()
+            errors["base"] = err or "cannot_connect_local_unknown"
+    schema = vol.Schema(PRINTER_SCHEMA)
+    if user_input is not None:
+        schema = flow.add_suggested_values_to_schema(
+            schema, {"host": user_input.get("host"), "serial": user_input.get("serial")}
+        )
+    return flow.async_show_form(step_id=step_id, data_schema=schema, errors=errors)
 
 
 class FilamentManagerConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -32,21 +62,36 @@ class FilamentManagerConfigFlow(ConfigFlow, domain=DOMAIN):
     VERSION = 1
 
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
-        if user_input is not None:
-            return self.async_create_entry(title="Bambu Filament Manager", data={}, options=dict(DEFAULTS))
+        if not await bambu_installed(self.hass):
+            return await self.async_step_install_bambu()
         printers = discover(self.hass)
         if not printers:
-            return self.async_show_form(step_id="no_printer", data_schema=vol.Schema({}))
-        names = ", ".join(p.name for p in printers)
-        return self.async_show_form(
+            return await self.async_step_printer()
+        return self.async_show_menu(
             step_id="user",
-            data_schema=vol.Schema({}),
-            description_placeholders={"count": str(len(printers)), "printers": names},
+            menu_options=["finish", "printer"],
+            description_placeholders={"printers": ", ".join(p.name for p in printers)},
         )
 
-    async def async_step_no_printer(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
-        """No printer yet: explain, then let the user continue anyway (printers are found later)."""
-        return await self.async_step_user({})
+    async def async_step_install_bambu(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        """ha-bambulab provides the printer connection – it has to be installed first."""
+        errors = {}
+        if user_input is not None:
+            if await bambu_installed(self.hass):
+                return await self.async_step_user()
+            errors["base"] = "bambu_missing"
+        return self.async_show_form(
+            step_id="install_bambu",
+            data_schema=vol.Schema({}),
+            errors=errors,
+            description_placeholders={"link": f"/marketplace/repository/{BAMBU_REPOSITORY_ID}"},
+        )
+
+    async def async_step_printer(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        return await _printer_step(self, "printer", user_input, self.async_step_finish)
+
+    async def async_step_finish(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        return self.async_create_entry(title="Bambu Filament Manager", data={}, options=dict(DEFAULTS))
 
     @staticmethod
     @callback
@@ -58,6 +103,15 @@ class FilamentManagerOptionsFlow(OptionsFlow):
     """Notifications and defaults."""
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        return self.async_show_menu(step_id="init", menu_options=["settings", "printer"])
+
+    async def async_step_printer(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        async def done() -> ConfigFlowResult:
+            return self.async_create_entry(data=dict(self.config_entry.options))
+
+        return await _printer_step(self, "printer", user_input, done)
+
+    async def async_step_settings(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         if user_input is not None:
             return self.async_create_entry(data=user_input)
 
@@ -110,4 +164,4 @@ class FilamentManagerOptionsFlow(OptionsFlow):
                 vol.Optional(CONF_IGNORED_TAGS, default=opts[CONF_IGNORED_TAGS]): multi(tag_choices),
             }
         )
-        return self.async_show_form(step_id="init", data_schema=schema)
+        return self.async_show_form(step_id="settings", data_schema=schema)

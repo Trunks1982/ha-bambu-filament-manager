@@ -80,6 +80,15 @@ async def _options_updated(hass: HomeAssistant, entry: FMConfigEntry) -> None:
     entry.runtime_data._notify_listeners(spools_changed=True)  # noqa: SLF001
 
 
+async def async_remove_entry(hass: HomeAssistant, entry: FMConfigEntry) -> None:
+    """Integration removed: delete the stored spools as well."""
+    from homeassistant.helpers.storage import Store  # noqa: PLC0415
+
+    from .const import STORAGE_KEY, STORAGE_VERSION  # noqa: PLC0415
+
+    await Store(hass, STORAGE_VERSION, STORAGE_KEY).async_remove()
+
+
 async def async_unload_entry(hass: HomeAssistant, entry: FMConfigEntry) -> bool:
     ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if ok:

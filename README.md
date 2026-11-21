@@ -2,7 +2,7 @@
 
 Spool inventory for Bambu Lab printers in Home Assistant – with an AMS card that looks like Bambu Studio, NFC stickers, live usage tracking and notifications.
 
-Builds on the [Bambu Lab integration (ha-bambulab)](https://github.com/greghesp/ha-bambulab). No helpers, scripts or automations needed.
+One setup dialog for printer and filament – the printer connection runs through the [Bambu Lab integration (ha-bambulab)](https://github.com/greghesp/ha-bambulab) in the background. No helpers, scripts or automations needed.
 
 ## Features
 - **AMS card like the original**: spools in their real colors with the remaining amount, active slot, humidity/temperature, external spool, AMS HT. Printer picture, cover image of the print, progress, layer, remaining time, temperatures, optional camera.
@@ -15,13 +15,14 @@ Builds on the [Bambu Lab integration (ha-bambulab)](https://github.com/greghesp/
 - **Original Bambu spools (RFID)** are added automatically; the AMS reports their rest.
 - Sensors per spool and per slot, events, and actions (`bambu_filament_manager.add_spool`, `assign_spool`, `weigh_spool`, …) for your own automations.
 
-## Requirements
-1. [ha-bambulab](https://github.com/greghesp/ha-bambulab) installed and the printer set up (LAN mode: IP address, serial number and access code from the printer screen – or cloud).
-2. Printing the filament usage needs the 3MF to be readable by ha-bambulab (on printers without SD card: USB stick and “store sent files on external storage” in Bambu Studio).
-
 ## Installation
-HACS → ⋮ → Custom repositories → add this repository (type *Integration*) → install → restart Home Assistant.
-Then Settings → Devices & services → Add integration → **Bambu Filament Manager**.
+1. Marketplace (or HACS) → ⋮ → Custom repositories → add `Trunks1982/ha-bambu-filament-manager` (type *Integration*) → download → restart Home Assistant.
+2. Settings → Devices & services → Add integration → **Bambu Filament Manager**.
+3. Enter the printer's **IP address, serial number and access code** (shown on the printer screen). The printer connection itself is set up in the background in the [Bambu Lab integration (ha-bambulab)](https://github.com/greghesp/ha-bambulab), so it keeps getting their updates for new printers and firmware. If ha-bambulab is not installed yet, the dialog links to it.
+   Already have a printer in ha-bambulab? Then it is found automatically – nothing to enter.
+4. More printers: integration → *Configure* → *Add printer*.
+
+Filament usage per print needs the 3MF to be readable by ha-bambulab (on printers without SD card: USB stick and “store sent files on external storage” in Bambu Studio).
 
 Add the card in the dashboard: “Bambu Filament” (`type: custom:bambu-filament-card`). It is loaded automatically – no resource needed.
 

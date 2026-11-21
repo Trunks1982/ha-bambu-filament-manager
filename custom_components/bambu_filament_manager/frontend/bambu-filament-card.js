@@ -2,7 +2,7 @@
  * Shows printer status and the AMS like in Bambu Studio / Handy, and manages spools.
  * No build step, no external dependencies. */
 const DOMAIN = "bambu_filament_manager";
-const CARD_VERSION = "0.1.1";
+const CARD_VERSION = "0.2.0";
 
 const I18N = {
   en: {

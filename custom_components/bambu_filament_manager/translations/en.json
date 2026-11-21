@@ -4,20 +4,51 @@
     "step": {
       "user": {
         "title": "Bambu Filament Manager",
-        "description": "Bambu Lab printers found: {count} ({printers}).\n\nThe integration manages your filament spools, reads AMS slots, NFC stickers and the usage per print. Afterwards the “Bambu Filament” card is available in your dashboard."
+        "description": "Printers found: {printers}.\n\nFinish the setup or add another printer?",
+        "menu_options": {
+          "finish": "Finish setup",
+          "printer": "Add another printer"
+        }
       },
-      "no_printer": {
-        "title": "No Bambu Lab printer found yet",
-        "description": "This integration builds on the **Bambu Lab** integration (ha-bambulab, via HACS). The printer connection is set up there:\n\n1. HACS → install **Bambu Lab** and restart Home Assistant.\n2. On the printer: Settings → **LAN only / developer mode** – it shows the **IP address** and the **access code**. The **serial number** is under device info.\n3. Settings → Devices & services → add **Bambu Lab** → choose “Local (LAN)” → enter IP, serial number and access code.\n\nThe printer then shows up here automatically. You can continue now – the printer is detected later."
+      "printer": {
+        "title": "Connect printer",
+        "description": "You find these on the printer:\n• **IP address and access code:** Settings → Network / WLAN (on P1/A1/P2S in the “LAN mode” menu).\n• **Serial number:** Settings → device info, or in Bambu Studio / Handy.\n\nTip: give the printer a fixed IP address in your router.",
+        "data": {
+          "host": "IP address",
+          "serial": "Serial number",
+          "access_code": "Access code"
+        }
+      },
+      "install_bambu": {
+        "title": "Bambu Lab integration missing",
+        "description": "The printer connection is handled by the **Bambu Lab** integration (ha-bambulab). To install it:\n\n1. [Open Bambu Lab in the Marketplace]({link}) → **Download**.\n2. **Restart** Home Assistant.\n3. Open this setup again – then you only enter IP, serial number and access code."
       }
     },
     "abort": {
       "single_instance_allowed": "Already configured."
+    },
+    "error": {
+      "printer_already_configured": "This printer is already set up.",
+      "bambu_missing": "The Bambu Lab integration is not installed yet (restart Home Assistant after installing it).",
+      "cannot_connect_local_timeout": "No answer from the printer. Is the IP address right and the printer switched on?",
+      "cannot_connect_local_access_denied": "Access denied – the access code is wrong.",
+      "cannot_connect_local_incorrect_serial": "The serial number does not match this printer.",
+      "cannot_connect_local_incorrect_address": "Connection refused – is the IP address right?",
+      "cannot_connect_local_address_unreachable": "The IP address cannot be reached.",
+      "cannot_connect_local_unknown": "Connection failed (unknown error).",
+      "bambu_flow_unexpected": "The Bambu Lab integration answered unexpectedly. Please add the printer directly in Bambu Lab."
     }
   },
   "options": {
     "step": {
       "init": {
+        "title": "Bambu Filament Manager",
+        "menu_options": {
+          "settings": "Settings (messages, weights, NFC)",
+          "printer": "Add printer"
+        }
+      },
+      "settings": {
         "title": "Settings",
         "description": "Messages are sent to all selected targets (text only). The list shows every notification service set up in your Home Assistant – e.g. mobile app, Telegram or WhatsApp if installed.",
         "data": {
@@ -36,7 +67,27 @@
           "ignored_tags": "Stickers you named yourself in HA are ignored anyway. Add automatically named ones (“Tag …”) here if they belong to something else (e.g. a door).",
           "default_spool_weight": "Used to compute the rest when weighing (scale shows filament + spool)."
         }
+      },
+      "printer": {
+        "title": "Connect printer",
+        "description": "You find these on the printer:\n• **IP address and access code:** Settings → Network / WLAN (on P1/A1/P2S in the “LAN mode” menu).\n• **Serial number:** Settings → device info, or in Bambu Studio / Handy.\n\nTip: give the printer a fixed IP address in your router.",
+        "data": {
+          "host": "IP address",
+          "serial": "Serial number",
+          "access_code": "Access code"
+        }
       }
+    },
+    "error": {
+      "printer_already_configured": "This printer is already set up.",
+      "bambu_missing": "The Bambu Lab integration is not installed yet (restart Home Assistant after installing it).",
+      "cannot_connect_local_timeout": "No answer from the printer. Is the IP address right and the printer switched on?",
+      "cannot_connect_local_access_denied": "Access denied – the access code is wrong.",
+      "cannot_connect_local_incorrect_serial": "The serial number does not match this printer.",
+      "cannot_connect_local_incorrect_address": "Connection refused – is the IP address right?",
+      "cannot_connect_local_address_unreachable": "The IP address cannot be reached.",
+      "cannot_connect_local_unknown": "Connection failed (unknown error).",
+      "bambu_flow_unexpected": "The Bambu Lab integration answered unexpectedly. Please add the printer directly in Bambu Lab."
     }
   },
   "entity": {

@@ -103,6 +103,7 @@ class FilamentManager:
         self.images: dict[str, str] = {}
         self._unsubs: list[CALLBACK_TYPE] = []
         self._state_unsub: CALLBACK_TYPE | None = None
+        self._started_unsub: CALLBACK_TYPE | None = None
         self._save_lock = asyncio.Lock()
         self._rediscover = Debouncer(
             hass, _LOGGER, cooldown=2, immediate=False, function=self._async_rediscover
@@ -133,8 +134,8 @@ class FilamentManager:
         if self.hass.is_running:
             await self._async_rediscover()
         else:
-            self._unsubs.append(
-                self.hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STARTED, self._on_started)
+            self._started_unsub = self.hass.bus.async_listen_once(
+                EVENT_HOMEASSISTANT_STARTED, self._on_started
             )
             await self._async_rediscover()
 
@@ -142,6 +143,9 @@ class FilamentManager:
         for unsub in self._unsubs:
             unsub()
         self._unsubs.clear()
+        if self._started_unsub:
+            self._started_unsub()
+            self._started_unsub = None
         if self._state_unsub:
             self._state_unsub()
             self._state_unsub = None
@@ -149,6 +153,7 @@ class FilamentManager:
         await self._async_save()
 
     async def _on_started(self, _event: Event) -> None:
+        self._started_unsub = None  # a one-time listener removes itself
         await self._async_rediscover()
 
     @callback
@@ -657,8 +662,13 @@ class FilamentManager:
                 self.jobs[printer.device_id] = job
             weights = self._weights(printer)
             # Right after a new start the sensor can still show the previous job's figures.
+            # Identical figures are only trusted if the sensor was updated after the last job ended.
             last = self.jobs.get(f"last_{printer.device_id}") or {}
-            stale = status != "running" and weights == last.get("weights") and name != last.get("name")
+            stale = False
+            if weights and weights == last.get("weights") and last.get("ended"):
+                pw = self.hass.states.get(printer.entities.get("print_weight", ""))
+                ended = dt_util.parse_datetime(last["ended"])
+                stale = pw is None or ended is None or pw.last_updated <= ended
             if weights and not stale:
                 job["weights"] = weights
                 # Remember which spool feeds which slot now – at the end of the print (or
@@ -687,7 +697,9 @@ class FilamentManager:
             if status == "failed":
                 factor = max(0.0, min(_num(self._state(printer, "print_progress"), 0), 100)) / 100
             self.jobs.pop(printer.device_id, None)
-            self.jobs[f"last_{printer.device_id}"] = {"name": job.get("name"), "weights": weights}
+            self.jobs[f"last_{printer.device_id}"] = {
+                "name": job.get("name"), "weights": weights, "ended": dt_util.utcnow().isoformat(),
+            }
             await self._consume_job(printer, job.get("name") or "", weights, factor, job.get("spools") or {},
                                     job.get("consumed") or {})
             await self._changed(spools_changed=True)
@@ -695,10 +707,10 @@ class FilamentManager:
     def _live_consume(self, printer: Printer, job: dict[str, Any]) -> bool:
         """Subtract filament while printing, proportional to the print progress."""
         progress = max(0.0, min(_num(self._state(printer, "print_progress"), 0), 100))
-        # Right after the start the progress can still show 100 % of the previous print.
+        # Right after the start the progress can still show the value of the previous print.
         # In that case wait until it has dropped before subtracting anything.
         if not job.get("progress_ok"):
-            if _num(job.get("p0"), 0) < 99 or progress < _num(job.get("p0"), 0):
+            if _num(job.get("p0"), 0) < 1 or progress < _num(job.get("p0"), 0):
                 job["progress_ok"] = True
             else:
                 return False

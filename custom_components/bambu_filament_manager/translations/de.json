@@ -4,20 +4,51 @@
     "step": {
       "user": {
         "title": "Bambu Filament Manager",
-        "description": "Gefundene Bambu-Lab-Drucker: {count} ({printers}).\n\nDie Integration verwaltet deine Filament-Rollen, liest AMS-Slots, NFC-Aufkleber und den Verbrauch je Druck. Die Karte „Bambu Filament“ steht danach im Dashboard zur Auswahl."
+        "description": "Gefundene Drucker: {printers}.\n\nFertig einrichten oder noch einen Drucker hinzufügen?",
+        "menu_options": {
+          "finish": "Fertig einrichten",
+          "printer": "Weiteren Drucker hinzufügen"
+        }
       },
-      "no_printer": {
-        "title": "Noch kein Bambu-Lab-Drucker gefunden",
-        "description": "Diese Integration baut auf der Integration **Bambu Lab** (ha-bambulab, über HACS) auf. Die Verbindung zum Drucker richtest du dort ein:\n\n1. HACS → **Bambu Lab** installieren und Home Assistant neu starten.\n2. Am Drucker: Einstellungen → **LAN-Modus / Entwicklermodus** – dort stehen **IP-Adresse** und **Zugangscode (Access Code)**. Die **Seriennummer** steht unter Geräteinfo.\n3. Einstellungen → Geräte & Dienste → **Bambu Lab** hinzufügen → „Lokal (LAN)“ wählen → IP, Seriennummer und Zugangscode eintragen.\n\nDanach erscheint der Drucker hier automatisch. Du kannst jetzt schon fortfahren – der Drucker wird später erkannt."
+      "printer": {
+        "title": "Drucker verbinden",
+        "description": "Die Angaben findest du am Drucker:\n• **IP-Adresse und Zugangscode:** Einstellungen → Netzwerk / WLAN (beim P1/A1/P2S im Menü „LAN-Modus“).\n• **Seriennummer:** Einstellungen → Geräteinfo, oder in Bambu Studio / Handy.\n\nTipp: Gib dem Drucker in deinem Router eine feste IP-Adresse.",
+        "data": {
+          "host": "IP-Adresse",
+          "serial": "Seriennummer",
+          "access_code": "Zugangscode (Access Code)"
+        }
+      },
+      "install_bambu": {
+        "title": "Bambu-Lab-Integration fehlt",
+        "description": "Die Verbindung zum Drucker übernimmt die Integration **Bambu Lab** (ha-bambulab). So installierst du sie:\n\n1. [Bambu Lab im Marketplace öffnen]({link}) → **Herunterladen**.\n2. Home Assistant **neu starten**.\n3. Diese Einrichtung erneut öffnen – danach gibst du nur noch IP, Seriennummer und Zugangscode ein."
       }
     },
     "abort": {
       "single_instance_allowed": "Ist schon eingerichtet."
+    },
+    "error": {
+      "printer_already_configured": "Dieser Drucker ist schon eingerichtet.",
+      "bambu_missing": "Die Bambu-Lab-Integration ist noch nicht installiert (nach der Installation Home Assistant neu starten).",
+      "cannot_connect_local_timeout": "Keine Antwort vom Drucker. Stimmt die IP-Adresse, und ist der Drucker eingeschaltet?",
+      "cannot_connect_local_access_denied": "Zugriff verweigert – der Zugangscode stimmt nicht.",
+      "cannot_connect_local_incorrect_serial": "Die Seriennummer passt nicht zu diesem Drucker.",
+      "cannot_connect_local_incorrect_address": "Verbindung abgelehnt – stimmt die IP-Adresse?",
+      "cannot_connect_local_address_unreachable": "Die IP-Adresse ist nicht erreichbar.",
+      "cannot_connect_local_unknown": "Verbindung fehlgeschlagen (unbekannter Fehler).",
+      "bambu_flow_unexpected": "Die Bambu-Lab-Integration hat unerwartet geantwortet. Bitte den Drucker direkt in Bambu Lab einrichten."
     }
   },
   "options": {
     "step": {
       "init": {
+        "title": "Bambu Filament Manager",
+        "menu_options": {
+          "settings": "Einstellungen (Nachrichten, Gewichte, NFC)",
+          "printer": "Drucker hinzufügen"
+        }
+      },
+      "settings": {
         "title": "Einstellungen",
         "description": "Nachrichten gehen an alle gewählten Ziele (nur Text). Angezeigt werden alle Benachrichtigungsdienste, die in deinem Home Assistant eingerichtet sind – z. B. Handy-App, Telegram oder WhatsApp, falls installiert.",
         "data": {
@@ -36,7 +67,27 @@
           "ignored_tags": "Aufkleber, die du in HA selbst benannt hast, werden sowieso ignoriert. Automatisch benannte („Tag …“) hier eintragen, wenn sie zu etwas anderem gehören (z. B. Tür).",
           "default_spool_weight": "Zum Ausrechnen des Rests beim Wiegen (Waage zeigt Rolle + Spule)."
         }
+      },
+      "printer": {
+        "title": "Drucker verbinden",
+        "description": "Die Angaben findest du am Drucker:\n• **IP-Adresse und Zugangscode:** Einstellungen → Netzwerk / WLAN (beim P1/A1/P2S im Menü „LAN-Modus“).\n• **Seriennummer:** Einstellungen → Geräteinfo, oder in Bambu Studio / Handy.\n\nTipp: Gib dem Drucker in deinem Router eine feste IP-Adresse.",
+        "data": {
+          "host": "IP-Adresse",
+          "serial": "Seriennummer",
+          "access_code": "Zugangscode (Access Code)"
+        }
       }
+    },
+    "error": {
+      "printer_already_configured": "Dieser Drucker ist schon eingerichtet.",
+      "bambu_missing": "Die Bambu-Lab-Integration ist noch nicht installiert (nach der Installation Home Assistant neu starten).",
+      "cannot_connect_local_timeout": "Keine Antwort vom Drucker. Stimmt die IP-Adresse, und ist der Drucker eingeschaltet?",
+      "cannot_connect_local_access_denied": "Zugriff verweigert – der Zugangscode stimmt nicht.",
+      "cannot_connect_local_incorrect_serial": "Die Seriennummer passt nicht zu diesem Drucker.",
+      "cannot_connect_local_incorrect_address": "Verbindung abgelehnt – stimmt die IP-Adresse?",
+      "cannot_connect_local_address_unreachable": "Die IP-Adresse ist nicht erreichbar.",
+      "cannot_connect_local_unknown": "Verbindung fehlgeschlagen (unbekannter Fehler).",
+      "bambu_flow_unexpected": "Die Bambu-Lab-Integration hat unerwartet geantwortet. Bitte den Drucker direkt in Bambu Lab einrichten."
     }
   },
   "entity": {
