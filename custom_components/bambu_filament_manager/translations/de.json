@@ -112,12 +112,16 @@
           "default_net_weight": "Filament auf neuer Rolle (Standard)",
           "track_bambu_spools": "Original-Bambu-Rollen (RFID) automatisch übernehmen",
           "ignored_tags": "NFC-Aufkleber ignorieren",
-          "scan_targets": "Scan-Meldung mit Slot-Knöpfen senden an"
+          "scan_targets": "Scan-Meldung mit Slot-Knöpfen senden an",
+          "notify_bed": "Warnung wenn das Bett zu kalt eingestellt ist",
+          "bed_auto_raise": "Bett beim Druckstart automatisch anheben"
         },
         "data_description": {
           "ignored_tags": "Aufkleber, die du in HA selbst benannt hast, werden sowieso ignoriert. Automatisch benannte („Tag …“) hier eintragen, wenn sie zu etwas anderem gehören (z. B. Tür).",
           "default_spool_weight": "Zum Ausrechnen des Rests beim Wiegen (Waage zeigt Rolle + Spule).",
-          "scan_targets": "Leer = an dieselben Ziele wie oben. Handy (HA-App) und Telegram bekommen Knöpfe für die Slots, alle anderen nur Text."
+          "scan_targets": "Leer = an dieselben Ziele wie oben. Handy (HA-App) und Telegram bekommen Knöpfe für die Slots, alle anderen nur Text.",
+          "notify_bed": "Beim Druckstart: Bett-Solltemperatur kleiner als die Rolle braucht (eigener Wert der Rolle, sonst Bambu-Studio-Profil für Drucker und Platte). Mit Knopf zum Anheben.",
+          "bed_auto_raise": "Ist das Bett kälter eingestellt als die Rolle braucht (z. B. eigene 110 °C für ASA), setzt der Filament Manager es selbst hoch und meldet das nur. Nur im LAN-Entwicklermodus."
         }
       },
       "printer": {
@@ -235,6 +239,9 @@
         },
         "tray": {
           "name": "AMS-Slot"
+        },
+        "bed_temp": {
+          "name": "Bett °C (0 = aus dem Profil)"
         }
       }
     },
@@ -283,6 +290,9 @@
         },
         "note": {
           "name": "Notiz"
+        },
+        "bed_temp": {
+          "name": "Bett °C (0 = aus dem Profil)"
         }
       }
     },

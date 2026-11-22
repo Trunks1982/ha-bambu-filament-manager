@@ -24,6 +24,7 @@ One setup dialog for printer and filament – the printer connection runs throug
   - HA app on Android: Android allows only 3 buttons, so each page shows 2 slots + “more ▸”; paging updates the same message without a new sound. iPhone: all slots at once.
   - Telegram: one button per slot with the full spool name and its rest; the slot the spool is already in is marked “✓”.
   - Tapping the message opens the card with the spool selected. Unknown sticker → the card offers to create a new spool with it.
+- **Bed temperature per spool**: suggested from the Bambu Studio profiles for your printer model and build plate (e.g. Generic ASA on the P2S: 90 °C), or your own value (e.g. 110 °C for ASA). Bambu's slot command has no bed temperature, so at print start the Filament Manager checks the bed target: too cold → warning with a “set bed to 110 °C” button, or – optional – raises it automatically (LAN developer mode).
 - **AMS drying** (AMS 2 Pro up to 65 °C, AMS HT up to 85 °C): temperature, duration and spool rotation, with the recommendation of the loaded spools and a warning for PLA. While drying the card shows the remaining time and a stop button (LAN developer mode).
 - **Live usage**: while printing, the grams are subtracted proportionally to the print progress. Cancelled prints only count the printed part. Survives restarts without double counting.
 - **Warnings**: “not enough filament for this print” at print start, “almost empty” after the print.
@@ -48,7 +49,7 @@ Filament usage per print needs the 3MF to be readable by ha-bambulab (on printer
 Add the card in the dashboard: *Add card → By card → Community cards →* **“Bambu Filament”** (with live preview) or `type: custom:bambu-filament-card`. It is loaded automatically – no resource needed.
 
 **Options** (integration → *Configure*):
-- *Settings*: notification targets, scan message targets, which messages, “almost empty” threshold, default empty spool weight and filament amount, add original Bambu spools automatically, NFC stickers to ignore.
+- *Settings*: notification targets, scan message targets, which messages (incl. bed temperature warning), raise the bed automatically, “almost empty” threshold, default empty spool weight and filament amount, add original Bambu spools automatically, NFC stickers to ignore.
 - *Add printer – local (LAN)* or *Add printer – Bambu Cloud*.
 
 ```yaml

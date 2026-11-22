@@ -2,7 +2,7 @@
  * Shows printer status and the AMS like in Bambu Studio / Handy, and manages spools.
  * No build step, no external dependencies. */
 const DOMAIN = "bambu_filament_manager";
-const CARD_VERSION = "0.5.2";
+const CARD_VERSION = "0.6.0";
 
 const I18N = {
   en: {
@@ -17,7 +17,7 @@ const I18N = {
     new_for_slot: "New spool for this slot", stale: "The slot shows different filament than the linked spool – choose the spool again.",
     on_printer: "Set on printer", name: "Name", vendor: "Vendor", profile: "Filament profile", custom_id: "Other filament ID…",
     material: "Material", filament_id: "Filament ID", color: "Color", nozzle: "Nozzle °C", spool_weight: "Empty spool (g)",
-    net_weight: "Filament when new (g)", sw_hint: "(remembered per vendor)", remaining: "Remaining (g)", scale: "Or weigh: scale shows (g)", tag: "NFC sticker",
+    net_weight: "Filament when new (g)", bed: "Bed °C", bed_auto: "auto", bed_hint: "empty = from the profile for this printer and plate", bed_short: "Bed", sw_hint: "(remembered per vendor)", remaining: "Remaining (g)", scale: "Or weigh: scale shows (g)", tag: "NFC sticker",
     take_tag: "Use last scanned sticker", save: "Save", delete: "Delete", delete_q: "Really delete this spool?", delete_tag: "Also delete the NFC sticker in Home Assistant",
     edit: "Edit spool", select: "Select (like NFC scan)", in_slot: "in", none: "No spools yet – create your first one.",
     needs: "needs", job: "Print job", linked_only: "linked (set color/profile on the printer)",
@@ -41,7 +41,7 @@ const I18N = {
     new_for_slot: "Neue Rolle für diesen Slot", stale: "Im Slot steht anderes Filament als in der verknüpften Rolle – Rolle bitte neu wählen.",
     on_printer: "Am Drucker eingestellt", name: "Name", vendor: "Hersteller", profile: "Filament-Profil", custom_id: "Andere Filament-ID…",
     material: "Material", filament_id: "Filament-ID", color: "Farbe", nozzle: "Düse °C", spool_weight: "Leere Spule (g)",
-    net_weight: "Filament neu (g)", sw_hint: "(merkt sich je Hersteller)", remaining: "Rest (g)", scale: "Oder wiegen: Waage zeigt (g)", tag: "NFC-Aufkleber",
+    net_weight: "Filament neu (g)", bed: "Bett °C", bed_auto: "auto", bed_hint: "leer = aus dem Profil für diesen Drucker und die Platte", bed_short: "Bett", sw_hint: "(merkt sich je Hersteller)", remaining: "Rest (g)", scale: "Oder wiegen: Waage zeigt (g)", tag: "NFC-Aufkleber",
     take_tag: "Zuletzt gescannten Aufkleber nehmen", save: "Speichern", delete: "Löschen", delete_q: "Rolle wirklich löschen?", delete_tag: "NFC-Aufkleber auch in Home Assistant löschen",
     edit: "Rolle bearbeiten", select: "Auswählen (wie NFC-Scan)", in_slot: "in", none: "Noch keine Rollen – lege deine erste an.",
     needs: "braucht", job: "Druckauftrag", linked_only: "verknüpft (Farbe/Profil am Drucker einstellen)",
@@ -138,6 +138,7 @@ class BambuFilamentCard extends HTMLElement {
 
   _subscribe() {
     if (!this._hass?.connection || this._unsub) return;
+    this._loadCatalog().then(() => { this._sig = ""; this._render(); });
     this._unsub = this._hass.connection.subscribeMessage((msg) => { this._data = msg; this._sig = ""; this._sig = this._stateSig(); this._render(); }, { type: `${DOMAIN}/subscribe` })
       .catch((err) => { this._data = { printers: [], spools: [], not_loaded: true, error: err?.message }; this._unsub = null; this._render(); });
   }
@@ -349,7 +350,7 @@ class BambuFilamentCard extends HTMLElement {
         return `<div class="row ${num(s.remaining) < low ? "low" : ""}" data-a="edit" data-id="${esc(s.id)}">
           <span class="dot" style="${fillStyle([s.color])}"></span>
           <div class="rinfo"><div class="rn">${esc(s.name)}${s.tag ? ` <ha-icon icon="mdi:nfc-variant"></ha-icon>` : ""}${s.bambu_uuid ? ` <ha-icon icon="mdi:contactless-payment"></ha-icon>` : ""}</div>
-            <div class="rs">${esc([s.vendor, s.material].filter(Boolean).join(" · "))}</div>
+            <div class="rs">${esc([s.vendor, s.material, this._spoolBed(s) ? `${t.bed_short} ${this._spoolBed(s)} °C` : ""].filter(Boolean).join(" · "))}</div>
             <div class="rbar"><div style="width:${pct}%;${fillStyle([s.color])}"></div></div></div>
           <div class="rg">${Math.round(num(s.remaining))} g${loc[s.id] ? `<span class="loc">${esc(loc[s.id])}</span>` : ""}</div>
         </div>`;
@@ -383,7 +384,7 @@ class BambuFilamentCard extends HTMLElement {
       <div class="dbody">
       ${!v.emptyTray ? `<div class="kv"><span>${esc(t.on_printer)}</span><b>${esc(a.name || "–")}</b> <small>${esc(a.type || "")} · ${esc(a.filament_id || "")} · ${esc(a.nozzle_temp_min || "")}–${esc(a.nozzle_temp_max || "")} °C</small></div>` : ""}
       ${tr.source === "bambu" ? `<div class="note"><ha-icon icon="mdi:contactless-payment"></ha-icon>${esc(t.bambu_rfid)}${num(a.remain, -1) >= 0 ? ` (${a.remain}%)` : ""}</div>` :
-        v.spool ? `<div class="kv"><span>${esc(t.linked)}</span><b>${esc(v.spool.name)}</b> <small>${Math.round(num(v.spool.remaining))} g</small> <button class="btn flat sm" data-a="edit" data-id="${esc(v.spool.id)}">${esc(t.edit)}</button></div>` :
+        v.spool ? `<div class="kv"><span>${esc(t.linked)}</span><b>${esc(v.spool.name)}</b> <small>${Math.round(num(v.spool.remaining))} g${this._spoolBed(v.spool) ? ` · ${esc(t.bed_short)} ${this._spoolBed(v.spool)} °C` : ""}</small> <button class="btn flat sm" data-a="edit" data-id="${esc(v.spool.id)}">${esc(t.edit)}</button></div>` :
         `<div class="kv"><span>${esc(t.linked)}</span><i>${esc(t.none_linked)}</i></div>${tr.stale_link ? `<div class="note warn">${esc(t.stale)}</div>` : ""}`}
       ${tr.source !== "bambu" && p.can_control === false ? `<div class="note warn"><ha-icon icon="mdi:lock-outline"></ha-icon> ${esc(t.no_control)}</div>` : ""}
       ${tr.source !== "bambu" ? `
@@ -433,6 +434,7 @@ class BambuFilamentCard extends HTMLElement {
           <label>${esc(t.nozzle)} min<input class="inp" type="number" inputmode="numeric" data-f="nozzle_min" value="${esc(f.nozzle_min)}"></label>
           <label>${esc(t.nozzle)} max<input class="inp" type="number" inputmode="numeric" data-f="nozzle_max" value="${esc(f.nozzle_max)}"></label>
         </div>
+        <label>${esc(t.bed)} <small class="hint">(${esc(t.bed_hint)})</small><input class="inp" type="number" inputmode="numeric" data-f="bed_temp" value="${num(f.bed_temp) > 0 ? esc(f.bed_temp) : ""}" placeholder="${esc(t.bed_auto)}${this._autoBed(f.filament_id) ? `: ${this._autoBed(f.filament_id)} °C` : ""}"></label>
         <div class="two">
           <label>${esc(t.spool_weight)}${this._dialog.id ? "" : ` <small class="hint">${esc(t.sw_hint)}</small>`}<input class="inp" type="number" inputmode="decimal" data-f="spool_weight" value="${esc(f.spool_weight)}"></label>
           <label>${esc(t.net_weight)}<input class="inp" type="number" inputmode="decimal" data-f="net_weight" value="${esc(f.net_weight)}"></label>
@@ -512,6 +514,18 @@ class BambuFilamentCard extends HTMLElement {
     delete form._tray; delete form._trayLabel;
     this._renderDialog();
     setTimeout(() => this.shadowRoot.querySelector('[data-f="name"]')?.focus(), 50);
+  }
+
+  _autoBed(fid) {
+    const p = this._printer, c = (this._catalog || []).find((x) => x.id === fid);
+    const bed = c?.bed; if (!bed || !p) return null;
+    return ((bed[p.model_key] || bed.default || {})[p.plate]) || null;
+  }
+
+  _spoolBed(s) {
+    if (!s) return null;
+    if (num(s.bed_temp) > 0) return num(s.bed_temp);
+    return this._autoBed(s.filament_id);
   }
 
   _readForm() {
@@ -701,6 +715,7 @@ class BambuFilamentCard extends HTMLElement {
           color: String(f.color || "808080").replace("#", ""), tag: (f.tag || "").trim(),
         };
         ["nozzle_min", "nozzle_max", "spool_weight", "net_weight"].forEach((k) => { if (f[k] !== "" && f[k] !== undefined && f[k] !== null) data[k] = num(f[k]); });
+        data.bed_temp = num(f.bed_temp) > 0 ? num(f.bed_temp) : 0;
         if (num(f.gross) > 0) data.gross_weight = num(f.gross);
         else if (f.remaining !== "" && f.remaining !== undefined) data.remaining = num(f.remaining);
         if (f.bambu_uuid) { delete data.filament_id; }

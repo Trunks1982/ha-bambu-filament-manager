@@ -35,6 +35,7 @@ SPOOL_SCHEMA = {
     vol.Optional("color"): cv.string,
     vol.Optional("nozzle_min"): vol.Coerce(int),
     vol.Optional("nozzle_max"): vol.Coerce(int),
+    vol.Optional("bed_temp"): vol.Coerce(int),
     vol.Optional("spool_weight"): vol.Coerce(float),
     vol.Optional("net_weight"): vol.Coerce(float),
     vol.Optional("remaining"): vol.Coerce(float),

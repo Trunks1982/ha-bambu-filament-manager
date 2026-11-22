@@ -7,7 +7,69 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      }
+    }
   },
   "GFA01": {
     "name": "Bambu PLA Matte",
@@ -17,7 +79,76 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      }
+    }
   },
   "GFA02": {
     "name": "Bambu PLA Metal",
@@ -27,7 +158,83 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A2L": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      }
+    }
   },
   "GFA05": {
     "name": "Bambu PLA Silk",
@@ -37,7 +244,66 @@
     "filament_is_support": false,
     "nozzle_temperature": 230,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 60
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      }
+    }
   },
   "GFA06": {
     "name": "Bambu PLA Silk+",
@@ -47,7 +313,94 @@
     "filament_is_support": false,
     "nozzle_temperature": 230,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 35
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 60,
+        "supertack_plate": 35
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "P1P": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 35
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "X1": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "X1C": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      }
+    }
   },
   "GFA07": {
     "name": "Bambu PLA Marble",
@@ -57,7 +410,83 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A2L": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      }
+    }
   },
   "GFA08": {
     "name": "Bambu PLA Sparkle",
@@ -67,7 +496,83 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A2L": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      }
+    }
   },
   "GFA09": {
     "name": "Bambu PLA Tough",
@@ -77,7 +582,76 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A2L": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      }
+    }
   },
   "GFA10": {
     "name": "Bambu PLA Tough+",
@@ -87,7 +661,76 @@
     "filament_is_support": false,
     "nozzle_temperature": 245,
     "nozzle_temperature_range_high": 250,
-    "nozzle_temperature_range_low": 220
+    "nozzle_temperature_range_low": 220,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      }
+    }
   },
   "GFA11": {
     "name": "Bambu PLA Aero",
@@ -97,7 +740,72 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 260,
-    "nozzle_temperature_range_low": 210
+    "nozzle_temperature_range_low": 210,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65
+      },
+      "A2L": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      }
+    }
   },
   "GFA12": {
     "name": "Bambu PLA Glow",
@@ -107,7 +815,82 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "P1P": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      }
+    }
   },
   "GFA13": {
     "name": "Bambu PLA Dynamic",
@@ -117,7 +900,82 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A2L": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "P1P": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      }
+    }
   },
   "GFA15": {
     "name": "Bambu PLA Galaxy",
@@ -127,7 +985,89 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A2L": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "P1P": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      }
+    }
   },
   "GFA16": {
     "name": "Bambu PLA Wood",
@@ -137,7 +1077,89 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A2L": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "P1P": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      }
+    }
   },
   "GFA17": {
     "name": "Bambu PLA Translucent",
@@ -147,7 +1169,75 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A2L": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "P1P": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      }
+    }
   },
   "GFA18": {
     "name": "Bambu PLA Lite",
@@ -157,7 +1247,68 @@
     "filament_is_support": false,
     "nozzle_temperature": 210,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "P1P": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      }
+    }
   },
   "GFA50": {
     "name": "Bambu PLA-CF",
@@ -167,7 +1318,62 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 250,
-    "nozzle_temperature_range_low": 210
+    "nozzle_temperature_range_low": 210,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 45,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 50
+      },
+      "A1": {
+        "cool_plate": 45,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 50
+      },
+      "A1M": {
+        "cool_plate": 45,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 50
+      },
+      "A2L": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 50
+      },
+      "H2C": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 50
+      },
+      "H2S": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 50
+      },
+      "H3C": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 50
+      },
+      "X2D": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      }
+    }
   },
   "GFB00": {
     "name": "Bambu ABS",
@@ -177,7 +1383,19 @@
     "filament_is_support": false,
     "nozzle_temperature": 270,
     "nozzle_temperature_range_high": 280,
-    "nozzle_temperature_range_low": 240
+    "nozzle_temperature_range_low": 240,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 90,
+        "hot_plate": 90,
+        "textured_plate": 90
+      },
+      "A1": {
+        "eng_plate": 90,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFB01": {
     "name": "Bambu ASA",
@@ -187,7 +1405,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 270,
     "nozzle_temperature_range_high": 280,
-    "nozzle_temperature_range_low": 240
+    "nozzle_temperature_range_low": 240,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFB02": {
     "name": "Bambu ASA-Aero",
@@ -197,7 +1422,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 270,
     "nozzle_temperature_range_high": 280,
-    "nozzle_temperature_range_low": 240
+    "nozzle_temperature_range_low": 240,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 90,
+        "hot_plate": 90,
+        "textured_plate": 90
+      }
+    }
   },
   "GFB50": {
     "name": "Bambu ABS-GF",
@@ -207,7 +1439,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 270,
     "nozzle_temperature_range_high": 280,
-    "nozzle_temperature_range_low": 240
+    "nozzle_temperature_range_low": 240,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 90,
+        "hot_plate": 90,
+        "textured_plate": 90
+      }
+    }
   },
   "GFB51": {
     "name": "Bambu ASA-CF",
@@ -217,7 +1456,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 275,
     "nozzle_temperature_range_high": 280,
-    "nozzle_temperature_range_low": 250
+    "nozzle_temperature_range_low": 250,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFB60": {
     "name": "PolyLite ABS",
@@ -227,7 +1473,24 @@
     "filament_is_support": false,
     "nozzle_temperature": 270,
     "nozzle_temperature_range_high": 280,
-    "nozzle_temperature_range_low": 240
+    "nozzle_temperature_range_low": 240,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 90,
+        "hot_plate": 90,
+        "textured_plate": 90
+      },
+      "A1": {
+        "eng_plate": 90,
+        "hot_plate": 100,
+        "textured_plate": 100
+      },
+      "P1P": {
+        "eng_plate": 90,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFB61": {
     "name": "PolyLite ASA",
@@ -237,7 +1500,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 260,
     "nozzle_temperature_range_high": 280,
-    "nozzle_temperature_range_low": 240
+    "nozzle_temperature_range_low": 240,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFB98": {
     "name": "Generic ASA",
@@ -247,7 +1517,19 @@
     "filament_is_support": false,
     "nozzle_temperature": 260,
     "nozzle_temperature_range_high": 280,
-    "nozzle_temperature_range_low": 240
+    "nozzle_temperature_range_low": 240,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      },
+      "P2S": {
+        "eng_plate": 90,
+        "hot_plate": 90,
+        "textured_plate": 90
+      }
+    }
   },
   "GFB99": {
     "name": "Generic ABS",
@@ -257,7 +1539,19 @@
     "filament_is_support": false,
     "nozzle_temperature": 270,
     "nozzle_temperature_range_high": 280,
-    "nozzle_temperature_range_low": 240
+    "nozzle_temperature_range_low": 240,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 90,
+        "hot_plate": 90,
+        "textured_plate": 90
+      },
+      "A1": {
+        "eng_plate": 90,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFC00": {
     "name": "Bambu PC",
@@ -267,7 +1561,24 @@
     "filament_is_support": false,
     "nozzle_temperature": 280,
     "nozzle_temperature_range_high": 290,
-    "nozzle_temperature_range_low": 260
+    "nozzle_temperature_range_low": 260,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 110,
+        "hot_plate": 110,
+        "textured_plate": 110
+      },
+      "A1": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      },
+      "P1S": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFC01": {
     "name": "Bambu PC FR",
@@ -277,7 +1588,29 @@
     "filament_is_support": false,
     "nozzle_temperature": 280,
     "nozzle_temperature_range_high": 290,
-    "nozzle_temperature_range_low": 260
+    "nozzle_temperature_range_low": 260,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 110,
+        "hot_plate": 110,
+        "textured_plate": 110
+      },
+      "A1": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      },
+      "P1P": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      },
+      "P1S": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFC99": {
     "name": "Generic PC",
@@ -287,7 +1620,29 @@
     "filament_is_support": false,
     "nozzle_temperature": 280,
     "nozzle_temperature_range_high": 290,
-    "nozzle_temperature_range_low": 260
+    "nozzle_temperature_range_low": 260,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 110,
+        "hot_plate": 110,
+        "textured_plate": 110
+      },
+      "A1": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      },
+      "P1S": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      },
+      "P2S": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFG00": {
     "name": "Bambu PETG Basic",
@@ -297,7 +1652,39 @@
     "filament_is_support": false,
     "nozzle_temperature": 255,
     "nozzle_temperature_range_high": 270,
-    "nozzle_temperature_range_low": 230
+    "nozzle_temperature_range_low": 230,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 70
+      },
+      "H2C": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 60
+      },
+      "H2S": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 60
+      },
+      "H3C": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 60
+      },
+      "X2D": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 60
+      }
+    }
   },
   "GFG01": {
     "name": "Bambu PETG Translucent",
@@ -307,7 +1694,39 @@
     "filament_is_support": false,
     "nozzle_temperature": 245,
     "nozzle_temperature_range_high": 270,
-    "nozzle_temperature_range_low": 230
+    "nozzle_temperature_range_low": 230,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 70
+      },
+      "H2C": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 60
+      },
+      "H2S": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 60
+      },
+      "H3C": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 60
+      },
+      "X2D": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 60
+      }
+    }
   },
   "GFG02": {
     "name": "Bambu PETG HF",
@@ -317,7 +1736,45 @@
     "filament_is_support": false,
     "nozzle_temperature": 245,
     "nozzle_temperature_range_high": 270,
-    "nozzle_temperature_range_low": 230
+    "nozzle_temperature_range_low": 230,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 70
+      },
+      "A2L": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 65
+      },
+      "H2C": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 60
+      },
+      "H2S": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 60
+      },
+      "H3C": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 60
+      },
+      "X2D": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 60
+      }
+    }
   },
   "GFG50": {
     "name": "Bambu PETG-CF",
@@ -327,7 +1784,39 @@
     "filament_is_support": false,
     "nozzle_temperature": 255,
     "nozzle_temperature_range_high": 270,
-    "nozzle_temperature_range_low": 240
+    "nozzle_temperature_range_low": 240,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 70
+      },
+      "A2L": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 65
+      },
+      "H2C": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 60
+      },
+      "H2S": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 60
+      },
+      "X2D": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 60
+      }
+    }
   },
   "GFG60": {
     "name": "PolyLite PETG",
@@ -337,7 +1826,27 @@
     "filament_is_support": false,
     "nozzle_temperature": 255,
     "nozzle_temperature_range_high": 260,
-    "nozzle_temperature_range_low": 220
+    "nozzle_temperature_range_low": 220,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 70
+      },
+      "A1": {
+        "eng_plate": 70,
+        "hot_plate": 80,
+        "textured_plate": 80,
+        "supertack_plate": 70
+      },
+      "P1P": {
+        "eng_plate": 70,
+        "hot_plate": 80,
+        "textured_plate": 80,
+        "supertack_plate": 70
+      }
+    }
   },
   "GFG96": {
     "name": "Generic PETG HF",
@@ -347,7 +1856,15 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 270,
-    "nozzle_temperature_range_low": 220
+    "nozzle_temperature_range_low": 220,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 70
+      }
+    }
   },
   "GFG97": {
     "name": "Generic PCTG",
@@ -357,7 +1874,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 255,
     "nozzle_temperature_range_high": 270,
-    "nozzle_temperature_range_low": 240
+    "nozzle_temperature_range_low": 240,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70
+      }
+    }
   },
   "GFG98": {
     "name": "Generic PETG-CF",
@@ -367,7 +1891,15 @@
     "filament_is_support": false,
     "nozzle_temperature": 255,
     "nozzle_temperature_range_high": 270,
-    "nozzle_temperature_range_low": 240
+    "nozzle_temperature_range_low": 240,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 70
+      }
+    }
   },
   "GFG99": {
     "name": "Generic PETG",
@@ -377,7 +1909,21 @@
     "filament_is_support": false,
     "nozzle_temperature": 255,
     "nozzle_temperature_range_high": 270,
-    "nozzle_temperature_range_low": 220
+    "nozzle_temperature_range_low": 220,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70,
+        "supertack_plate": 70
+      },
+      "A1": {
+        "eng_plate": 70,
+        "hot_plate": 80,
+        "textured_plate": 80,
+        "supertack_plate": 70
+      }
+    }
   },
   "GFL00": {
     "name": "PolyLite PLA",
@@ -387,7 +1933,48 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      }
+    }
   },
   "GFL01": {
     "name": "PolyTerra PLA",
@@ -397,7 +1984,48 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      }
+    }
   },
   "GFL03": {
     "name": "eSUN PLA+",
@@ -407,7 +2035,48 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      }
+    }
   },
   "GFL04": {
     "name": "Overture PLA",
@@ -417,7 +2086,42 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      }
+    }
   },
   "GFL05": {
     "name": "Overture Matte PLA",
@@ -427,7 +2131,54 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "P1P": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      }
+    }
   },
   "GFL06": {
     "name": "Fiberon PETG-ESD",
@@ -507,7 +2258,89 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A2L": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "P1P": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      }
+    }
   },
   "GFL96": {
     "name": "Generic PLA Silk",
@@ -517,7 +2350,77 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 60,
+        "supertack_plate": 35
+      },
+      "A2L": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      }
+    }
   },
   "GFL98": {
     "name": "Generic PLA-CF",
@@ -527,7 +2430,83 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 45,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 50
+      },
+      "A1": {
+        "cool_plate": 45,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 50
+      },
+      "A1M": {
+        "cool_plate": 45,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 50
+      },
+      "A2L": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 50
+      },
+      "H2C": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 50
+      },
+      "H2D": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 50
+      },
+      "H2DP": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 50
+      },
+      "H2S": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 50
+      },
+      "H3C": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 50
+      },
+      "P2S": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 50
+      },
+      "X2D": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 50
+      }
+    }
   },
   "GFL99": {
     "name": "Generic PLA",
@@ -537,7 +2516,83 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A2L": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      }
+    }
   },
   "GFN03": {
     "name": "Bambu PA-CF",
@@ -547,7 +2602,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 280,
     "nozzle_temperature_range_high": 300,
-    "nozzle_temperature_range_low": 260
+    "nozzle_temperature_range_low": 260,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFN04": {
     "name": "Bambu PAHT-CF",
@@ -557,7 +2619,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 290,
     "nozzle_temperature_range_high": 300,
-    "nozzle_temperature_range_low": 260
+    "nozzle_temperature_range_low": 260,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFN05": {
     "name": "Bambu PA6-CF",
@@ -567,7 +2636,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 275,
     "nozzle_temperature_range_high": 300,
-    "nozzle_temperature_range_low": 260
+    "nozzle_temperature_range_low": 260,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFN06": {
     "name": "Bambu PPA-CF",
@@ -577,7 +2653,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 290,
     "nozzle_temperature_range_high": 320,
-    "nozzle_temperature_range_low": 280
+    "nozzle_temperature_range_low": 280,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFN08": {
     "name": "Bambu PA6-GF",
@@ -587,7 +2670,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 290,
     "nozzle_temperature_range_high": 300,
-    "nozzle_temperature_range_low": 260
+    "nozzle_temperature_range_low": 260,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFN96": {
     "name": "Generic PPA-GF",
@@ -597,7 +2687,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 290,
     "nozzle_temperature_range_high": 320,
-    "nozzle_temperature_range_low": 280
+    "nozzle_temperature_range_low": 280,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFN97": {
     "name": "Generic PPA-CF",
@@ -607,7 +2704,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 290,
     "nozzle_temperature_range_high": 320,
-    "nozzle_temperature_range_low": 280
+    "nozzle_temperature_range_low": 280,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFN98": {
     "name": "Generic PA-CF",
@@ -617,7 +2721,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 290,
     "nozzle_temperature_range_high": 300,
-    "nozzle_temperature_range_low": 260
+    "nozzle_temperature_range_low": 260,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFN99": {
     "name": "Generic PA",
@@ -627,7 +2738,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 260,
     "nozzle_temperature_range_high": 280,
-    "nozzle_temperature_range_low": 240
+    "nozzle_temperature_range_low": 240,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFP95": {
     "name": "Generic PP-GF",
@@ -637,7 +2755,44 @@
     "filament_is_support": false,
     "nozzle_temperature": 235,
     "nozzle_temperature_range_high": 250,
-    "nozzle_temperature_range_low": 220
+    "nozzle_temperature_range_low": 220,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      }
+    }
   },
   "GFP96": {
     "name": "Generic PP-CF",
@@ -647,7 +2802,44 @@
     "filament_is_support": false,
     "nozzle_temperature": 235,
     "nozzle_temperature_range_high": 250,
-    "nozzle_temperature_range_low": 220
+    "nozzle_temperature_range_low": 220,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      }
+    }
   },
   "GFP97": {
     "name": "Generic PP",
@@ -657,7 +2849,44 @@
     "filament_is_support": false,
     "nozzle_temperature": 235,
     "nozzle_temperature_range_high": 250,
-    "nozzle_temperature_range_low": 220
+    "nozzle_temperature_range_low": 220,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      }
+    }
   },
   "GFP98": {
     "name": "Generic PE-CF",
@@ -667,7 +2896,44 @@
     "filament_is_support": false,
     "nozzle_temperature": 210,
     "nozzle_temperature_range_high": 220,
-    "nozzle_temperature_range_low": 175
+    "nozzle_temperature_range_low": 175,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      }
+    }
   },
   "GFP99": {
     "name": "Generic PE",
@@ -677,7 +2943,44 @@
     "filament_is_support": false,
     "nozzle_temperature": 210,
     "nozzle_temperature_range_high": 220,
-    "nozzle_temperature_range_low": 175
+    "nozzle_temperature_range_low": 175,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      }
+    }
   },
   "GFR98": {
     "name": "Generic PHA",
@@ -687,7 +2990,44 @@
     "filament_is_support": false,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      }
+    }
   },
   "GFR99": {
     "name": "Generic EVA",
@@ -697,7 +3037,44 @@
     "filament_is_support": false,
     "nozzle_temperature": 210,
     "nozzle_temperature_range_high": 220,
-    "nozzle_temperature_range_low": 175
+    "nozzle_temperature_range_low": 175,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      }
+    }
   },
   "GFS00": {
     "name": "Bambu Support W",
@@ -707,7 +3084,75 @@
     "filament_is_support": true,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 40,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 40,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 40,
+        "hot_plate": 60,
+        "textured_plate": 60,
+        "supertack_plate": 45
+      },
+      "A2L": {
+        "cool_plate": 40,
+        "hot_plate": 60,
+        "textured_plate": 60,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2D": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2DP": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2S": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "P2S": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "X2D": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      }
+    }
   },
   "GFS01": {
     "name": "Bambu Support G",
@@ -717,7 +3162,14 @@
     "filament_is_support": true,
     "nozzle_temperature": 280,
     "nozzle_temperature_range_high": 300,
-    "nozzle_temperature_range_low": 260
+    "nozzle_temperature_range_low": 260,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFS02": {
     "name": "Bambu Support For PLA",
@@ -727,7 +3179,83 @@
     "filament_is_support": true,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 40,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 40,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 40,
+        "hot_plate": 60,
+        "textured_plate": 60,
+        "supertack_plate": 45
+      },
+      "A2L": {
+        "cool_plate": 40,
+        "eng_plate": 60,
+        "hot_plate": 60,
+        "textured_plate": 60,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2D": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2DP": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H2S": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "H3C": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      },
+      "P2S": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 40
+      },
+      "X2D": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 45
+      }
+    }
   },
   "GFS03": {
     "name": "Bambu Support For PA/PET",
@@ -737,7 +3265,14 @@
     "filament_is_support": true,
     "nozzle_temperature": 280,
     "nozzle_temperature_range_high": 300,
-    "nozzle_temperature_range_low": 260
+    "nozzle_temperature_range_low": 260,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100
+      }
+    }
   },
   "GFS04": {
     "name": "Bambu PVA",
@@ -747,7 +3282,88 @@
     "filament_is_support": true,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 250,
-    "nozzle_temperature_range_low": 210
+    "nozzle_temperature_range_low": 210,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 45,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "A1": {
+        "cool_plate": 45,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 35
+      },
+      "A1M": {
+        "cool_plate": 45,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 35
+      },
+      "A2L": {
+        "cool_plate": 45,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 35
+      },
+      "H2C": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "H2D": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "H2DP": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "H2S": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "H3C": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "P1P": {
+        "cool_plate": 45,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 35
+      },
+      "P2S": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "X2D": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      }
+    }
   },
   "GFS05": {
     "name": "Bambu Support For PLA/PETG",
@@ -757,7 +3373,94 @@
     "filament_is_support": true,
     "nozzle_temperature": 210,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 35,
+        "hot_plate": 60,
+        "textured_plate": 60,
+        "supertack_plate": 45
+      },
+      "A1": {
+        "cool_plate": 35,
+        "eng_plate": 65,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 35,
+        "eng_plate": 65,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "A2L": {
+        "cool_plate": 35,
+        "eng_plate": 65,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "H2C": {
+        "cool_plate": 35,
+        "eng_plate": 60,
+        "hot_plate": 60,
+        "textured_plate": 60
+      },
+      "H2D": {
+        "cool_plate": 35,
+        "eng_plate": 60,
+        "hot_plate": 60,
+        "textured_plate": 60
+      },
+      "H2DP": {
+        "cool_plate": 35,
+        "eng_plate": 60,
+        "hot_plate": 60,
+        "textured_plate": 60
+      },
+      "H2S": {
+        "cool_plate": 35,
+        "eng_plate": 60,
+        "hot_plate": 60,
+        "textured_plate": 60
+      },
+      "H3C": {
+        "cool_plate": 35,
+        "eng_plate": 60,
+        "hot_plate": 60,
+        "textured_plate": 60,
+        "supertack_plate": 45
+      },
+      "P1P": {
+        "cool_plate": 35,
+        "eng_plate": 65,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 45
+      },
+      "P2S": {
+        "cool_plate": 35,
+        "eng_plate": 60,
+        "hot_plate": 60,
+        "textured_plate": 60
+      },
+      "X1C": {
+        "cool_plate": 35,
+        "eng_plate": 60,
+        "hot_plate": 60,
+        "textured_plate": 60,
+        "supertack_plate": 45
+      },
+      "X2D": {
+        "cool_plate": 35,
+        "eng_plate": 60,
+        "hot_plate": 60,
+        "textured_plate": 60,
+        "supertack_plate": 40
+      }
+    }
   },
   "GFS06": {
     "name": "Bambu Support for ABS",
@@ -767,7 +3470,14 @@
     "filament_is_support": true,
     "nozzle_temperature": 270,
     "nozzle_temperature_range_high": 270,
-    "nozzle_temperature_range_low": 240
+    "nozzle_temperature_range_low": 240,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 90,
+        "hot_plate": 90,
+        "textured_plate": 90
+      }
+    }
   },
   "GFS97": {
     "name": "Generic BVOH",
@@ -777,7 +3487,44 @@
     "filament_is_support": true,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 40,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2C": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2D": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "H2DP": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "P2S": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      },
+      "X2D": {
+        "cool_plate": 40,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55
+      }
+    }
   },
   "GFS98": {
     "name": "Generic HIPS",
@@ -787,7 +3534,29 @@
     "filament_is_support": true,
     "nozzle_temperature": 240,
     "nozzle_temperature_range_high": 270,
-    "nozzle_temperature_range_low": 220
+    "nozzle_temperature_range_low": 220,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 90,
+        "hot_plate": 90,
+        "textured_plate": 90
+      },
+      "A1": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70
+      },
+      "A1M": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70
+      },
+      "A2L": {
+        "eng_plate": 70,
+        "hot_plate": 70,
+        "textured_plate": 70
+      }
+    }
   },
   "GFS99": {
     "name": "Generic PVA",
@@ -797,7 +3566,68 @@
     "filament_is_support": true,
     "nozzle_temperature": 220,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 190
+    "nozzle_temperature_range_low": 190,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 45,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "A1": {
+        "cool_plate": 45,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 35
+      },
+      "A1M": {
+        "cool_plate": 45,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 35
+      },
+      "A2L": {
+        "cool_plate": 45,
+        "hot_plate": 65,
+        "textured_plate": 65,
+        "supertack_plate": 35
+      },
+      "H2C": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "H2D": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "H2DP": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "P2S": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      },
+      "X2D": {
+        "cool_plate": 45,
+        "eng_plate": 55,
+        "hot_plate": 55,
+        "textured_plate": 55,
+        "supertack_plate": 35
+      }
+    }
   },
   "GFSB98": {
     "name": "Generic ASA",
@@ -917,7 +3747,57 @@
     "filament_is_support": false,
     "nozzle_temperature": 270,
     "nozzle_temperature_range_high": 290,
-    "nozzle_temperature_range_low": 260
+    "nozzle_temperature_range_low": 260,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 80,
+        "hot_plate": 100,
+        "textured_plate": 100,
+        "supertack_plate": 80
+      },
+      "H2C": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100,
+        "supertack_plate": 80
+      },
+      "H2D": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100,
+        "supertack_plate": 80
+      },
+      "H2DP": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100,
+        "supertack_plate": 80
+      },
+      "H2S": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100,
+        "supertack_plate": 80
+      },
+      "H3C": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100,
+        "supertack_plate": 80
+      },
+      "P2S": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100,
+        "supertack_plate": 80
+      },
+      "X2D": {
+        "eng_plate": 100,
+        "hot_plate": 100,
+        "textured_plate": 100,
+        "supertack_plate": 80
+      }
+    }
   },
   "GFT02": {
     "name": "Bambu PPS-CF",
@@ -927,7 +3807,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 320,
     "nozzle_temperature_range_high": 340,
-    "nozzle_temperature_range_low": 310
+    "nozzle_temperature_range_low": 310,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 110,
+        "hot_plate": 110,
+        "textured_plate": 110
+      }
+    }
   },
   "GFT97": {
     "name": "Generic PPS",
@@ -937,7 +3824,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 320,
     "nozzle_temperature_range_high": 340,
-    "nozzle_temperature_range_low": 300
+    "nozzle_temperature_range_low": 300,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 110,
+        "hot_plate": 110,
+        "textured_plate": 110
+      }
+    }
   },
   "GFT98": {
     "name": "Generic PPS-CF",
@@ -947,7 +3841,14 @@
     "filament_is_support": false,
     "nozzle_temperature": 320,
     "nozzle_temperature_range_high": 340,
-    "nozzle_temperature_range_low": 310
+    "nozzle_temperature_range_low": 310,
+    "bed_temperature": {
+      "default": {
+        "eng_plate": 110,
+        "hot_plate": 110,
+        "textured_plate": 110
+      }
+    }
   },
   "GFU00": {
     "name": "Bambu TPU 95A HF",
@@ -957,7 +3858,81 @@
     "filament_is_support": false,
     "nozzle_temperature": 230,
     "nozzle_temperature_range_high": 250,
-    "nozzle_temperature_range_low": 200
+    "nozzle_temperature_range_low": 200,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "A1": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 45,
+        "textured_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 30,
+        "textured_plate": 30
+      },
+      "A2L": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2C": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2D": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2DP": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2S": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H3C": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "P1P": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 45,
+        "textured_plate": 45
+      },
+      "P2S": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "X2D": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      }
+    }
   },
   "GFU01": {
     "name": "Bambu TPU 95A",
@@ -967,7 +3942,69 @@
     "filament_is_support": false,
     "nozzle_temperature": 230,
     "nozzle_temperature_range_high": 250,
-    "nozzle_temperature_range_low": 200
+    "nozzle_temperature_range_low": 200,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "A1": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 45,
+        "textured_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 30,
+        "textured_plate": 30
+      },
+      "A2L": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2C": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2D": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2DP": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2S": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "P2S": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "X2D": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      }
+    }
   },
   "GFU02": {
     "name": "Bambu TPU for AMS",
@@ -977,7 +4014,57 @@
     "filament_is_support": false,
     "nozzle_temperature": 230,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 220
+    "nozzle_temperature_range_low": 220,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2C": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2D": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2DP": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2S": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H3C": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "P2S": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "X2D": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      }
+    }
   },
   "GFU03": {
     "name": "Bambu TPU 90A",
@@ -987,7 +4074,75 @@
     "filament_is_support": false,
     "nozzle_temperature": 225,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 200
+    "nozzle_temperature_range_low": 200,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "A1": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 45,
+        "textured_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 30,
+        "textured_plate": 30
+      },
+      "A2L": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2C": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2D": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2DP": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2S": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H3C": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "P2S": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "X2D": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      }
+    }
   },
   "GFU04": {
     "name": "Bambu TPU 85A",
@@ -997,7 +4152,57 @@
     "filament_is_support": false,
     "nozzle_temperature": 225,
     "nozzle_temperature_range_high": 240,
-    "nozzle_temperature_range_low": 200
+    "nozzle_temperature_range_low": 200,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2C": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2D": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2DP": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2S": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H3C": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "P2S": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "X2D": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      }
+    }
   },
   "GFU98": {
     "name": "Generic TPU for AMS",
@@ -1007,7 +4212,57 @@
     "filament_is_support": false,
     "nozzle_temperature": 230,
     "nozzle_temperature_range_high": 250,
-    "nozzle_temperature_range_low": 200
+    "nozzle_temperature_range_low": 200,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2C": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2D": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2DP": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2S": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H3C": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "P2S": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "X2D": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      }
+    }
   },
   "GFU99": {
     "name": "Generic TPU",
@@ -1017,6 +4272,74 @@
     "filament_is_support": false,
     "nozzle_temperature": 240,
     "nozzle_temperature_range_high": 250,
-    "nozzle_temperature_range_low": 200
+    "nozzle_temperature_range_low": 200,
+    "bed_temperature": {
+      "default": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "A1": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 45,
+        "textured_plate": 45
+      },
+      "A1M": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 30,
+        "textured_plate": 30
+      },
+      "A2L": {
+        "cool_plate": 30,
+        "eng_plate": 30,
+        "hot_plate": 30,
+        "textured_plate": 30
+      },
+      "H2C": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2D": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2DP": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H2S": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "H3C": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "P2S": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      },
+      "X2D": {
+        "cool_plate": 30,
+        "eng_plate": 35,
+        "hot_plate": 35,
+        "textured_plate": 35
+      }
+    }
   }
 }

@@ -23,6 +23,7 @@ PRINTER_KEYS = {
     "print_error", "door_open", "chamber_light", "pause", "resume", "stop", "speed_profile",
     "printing_speed", "print_bed_type", "nozzle_diameter", "nozzle_type", "total_usage_hours",
     "wifi_signal", "gcode_file", "mqtt_mode", "camera_switch", "developer_lan_mode",
+    "target_bed_temperature",
 }
 UNIT_KEYS = {
     "humidity", "humidity_index", "ams_temp", "drying", "remaining_drying_time",

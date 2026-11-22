@@ -112,12 +112,16 @@
           "default_net_weight": "Filament on a new spool (default)",
           "track_bambu_spools": "Add original Bambu spools (RFID) automatically",
           "ignored_tags": "Ignore NFC stickers",
-          "scan_targets": "Send the scan message with slot buttons to"
+          "scan_targets": "Send the scan message with slot buttons to",
+          "notify_bed": "Warn when the bed is set too cold",
+          "bed_auto_raise": "Raise the bed automatically at print start"
         },
         "data_description": {
           "ignored_tags": "Stickers you named yourself in HA are ignored anyway. Add automatically named ones (“Tag …”) here if they belong to something else (e.g. a door).",
           "default_spool_weight": "Used to compute the rest when weighing (scale shows filament + spool).",
-          "scan_targets": "Empty = same targets as above. Phones (HA app) and Telegram get buttons for the slots, everything else text only."
+          "scan_targets": "Empty = same targets as above. Phones (HA app) and Telegram get buttons for the slots, everything else text only.",
+          "notify_bed": "At print start: bed target lower than the spool needs (the spool's own value, otherwise the Bambu Studio profile for printer and plate). With a button to raise it.",
+          "bed_auto_raise": "If the bed is set colder than the spool needs (e.g. your own 110 °C for ASA), the Filament Manager raises it itself and only reports it. LAN developer mode only."
         }
       },
       "printer": {
@@ -235,6 +239,9 @@
         },
         "tray": {
           "name": "AMS slot"
+        },
+        "bed_temp": {
+          "name": "Bed °C (0 = from the profile)"
         }
       }
     },
@@ -283,6 +290,9 @@
         },
         "note": {
           "name": "Note"
+        },
+        "bed_temp": {
+          "name": "Bed °C (0 = from the profile)"
         }
       }
     },

@@ -132,6 +132,7 @@ class SpoolSensor(_Base):
             "color": "#" + (sp.get("color") or "808080FF"),
             "nozzle_min": sp.get("nozzle_min"),
             "nozzle_max": sp.get("nozzle_max"),
+            "bed_temp": sp.get("bed_temp") or None,
             "spool_weight": sp.get("spool_weight"),
             "net_weight": net,
             "percent": round((sp.get("remaining") or 0) / net * 100) if net else None,

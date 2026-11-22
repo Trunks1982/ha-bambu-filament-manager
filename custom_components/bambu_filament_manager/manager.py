@@ -27,6 +27,8 @@ from .const import (
     CONF_DEFAULT_SPOOL_WEIGHT,
     CONF_IGNORED_TAGS,
     CONF_LOW_THRESHOLD,
+    CONF_BED_AUTO,
+    CONF_NOTIFY_BED,
     CONF_NOTIFY_INSUFFICIENT,
     CONF_NOTIFY_SCAN,
     CONF_NOTIFY_SUMMARY,
@@ -60,6 +62,7 @@ SPOOL_FIELDS = {
     "color": str,
     "nozzle_min": int,
     "nozzle_max": int,
+    "bed_temp": int,
     "spool_weight": float,
     "net_weight": float,
     "remaining": float,
@@ -106,6 +109,7 @@ class FilamentManager:
         self._buttons: dict[str, tuple[str, str]] = {}
         self._scan_pages: dict[str, dict[str, Any]] = {}  # session -> {spool, choices, text}
         self._card_url: str | None = None
+        self._bed_buttons: dict[str, tuple[str, int]] = {}  # token -> (printer device_id, temperature)
         self._unsubs: list[CALLBACK_TYPE] = []
         self._state_unsub: CALLBACK_TYPE | None = None
         self._started_unsub: CALLBACK_TYPE | None = None
@@ -201,7 +205,7 @@ class FilamentManager:
         self.images = await self.hass.async_add_executor_job(self._find_images)
         watch: list[str] = []
         for p in self.printers:
-            for key in ("print_status", "print_weight", "print_progress"):
+            for key in ("print_status", "print_weight", "print_progress", "target_bed_temp", "print_bed_type"):
                 if key in p.entities:
                     watch.append(p.entities[key])
             watch.extend(t.entity_id for t in p.trays)
@@ -225,6 +229,29 @@ class FilamentManager:
             if entity_id in p.entities.values() or any(t.entity_id == entity_id for t in p.trays):
                 return p
         return None
+
+    # ------------------------------------------------------------------ bed temperature
+    MODEL_ALIASES = {"A1MINI": "A1M", "P1S": "P1P", "X1": "X1C", "X1CARBON": "X1C", "X1E": "X1C", "H2DPRO": "H2DP"}
+
+    def _model_key(self, printer: Printer) -> str:
+        m = (printer.model or "").upper().replace(" ", "").replace("-", "")
+        return self.MODEL_ALIASES.get(m, m)
+
+    def _plate(self, printer: Printer) -> str:
+        plate = self._state(printer, "print_bed_type") or ""
+        return plate if plate.endswith("_plate") else "textured_plate"
+
+    def catalog_bed(self, filament_id: str, model: str, plate: str) -> int | None:
+        bed = (self.catalog.get(filament_id or "") or {}).get("bed_temperature") or {}
+        table = bed.get(model) or bed.get("default") or {}
+        return table.get(plate)
+
+    def bed_for(self, printer: Printer, spool: dict[str, Any] | None, filament_id: str = "") -> tuple[int | None, str]:
+        """Bed temperature a spool needs on this printer and plate: (°C, 'spool'|'profile')."""
+        if spool and int(_num(spool.get("bed_temp"))) > 0:
+            return int(_num(spool["bed_temp"])), "spool"
+        fid = (spool or {}).get("filament_id") or filament_id
+        return self.catalog_bed(fid, self._model_key(printer), self._plate(printer)), "profile"
 
     def can_control(self, printer: Printer) -> bool:
         """False if the printer firmware blocks commands from HA.
@@ -492,6 +519,10 @@ class FilamentManager:
         rest = round(_num(spool.get("remaining")))
         line1 = t(self.lang, "scan_line", material=spool.get("material") or "?",
                   tmin=spool.get("nozzle_min"), tmax=spool.get("nozzle_max"), rest=rest)
+        if self.printers:
+            bed, _src = self.bed_for(self.printers[0], spool)
+            if bed:
+                line1 += " · " + t(self.lang, "scan_bed", temp=bed)
         loc = self.spool_location(spool["id"])
         line2 = t(self.lang, "scan_loc", tray=loc["tray"]) if loc else ""
         title = f"🎨 {spool['name']}"
@@ -546,6 +577,11 @@ class FilamentManager:
 
     async def _assign_from_button(self, token: str) -> tuple[str, str]:
         """Run a button: returns (title, message) for the answer."""
+        if token in self._bed_buttons:
+            try:
+                return await self._run_bed_button(token)
+            except Exception as err:  # noqa: BLE001
+                return "⚠️", str(err)
         entry = self._buttons.pop(token, None)
         if entry is None:
             return t(self.lang, "btn_expired_title"), t(self.lang, "btn_expired")
@@ -574,7 +610,8 @@ class FilamentManager:
                                                     blocking=False)
             return
         title, msg = await self._assign_from_button(action[4:])
-        targets = self.options.get(CONF_SCAN_TARGETS) or self.options.get(CONF_NOTIFY_TARGETS, [])
+        targets = list(dict.fromkeys(
+            (self.options.get(CONF_SCAN_TARGETS) or []) + self.options.get(CONF_NOTIFY_TARGETS, [])))
         for target in targets:
             phone, _apple = self._phone_service(target)
             if phone:
@@ -949,6 +986,7 @@ class FilamentManager:
                         sp, src = self.resolve_tray(tray)
                         if sp is not None and src == "assigned":
                             spools[key] = sp["id"]
+            await self._check_bed(printer, job)
             live = status == "running" and self._live_consume(printer, job)
             # Check again whenever the figures change (they can arrive late or be corrected).
             if job["weights"] and job.get("checked") != job["weights"]:
@@ -972,6 +1010,96 @@ class FilamentManager:
             await self._consume_job(printer, job.get("name") or "", weights, factor, job.get("spools") or {},
                                     job.get("consumed") or {})
             await self._changed(spools_changed=True)
+
+    async def _check_bed(self, printer: Printer, job: dict[str, Any]) -> None:
+        """Warn once per job if the bed is set lower than a used spool needs."""
+        if job.get("bed_checked") or not job.get("weights"):
+            return
+        target = _num(self._state(printer, "target_bed_temp"), 0)
+        if target <= 0:
+            return  # not heating yet
+        job["bed_checked"] = True
+        worst: tuple[int, str, str] | None = None
+        for key in job["weights"]:
+            tray = printer.tray_by_key(key)
+            if tray is None:
+                continue
+            spool = self.spools.get((job.get("spools") or {}).get(key, ""))
+            if spool is None:
+                spool, _src = self.resolve_tray(tray)
+            attrs = self._tray_attrs(tray)
+            need, _source = self.bed_for(printer, spool, str(attrs.get("filament_id") or ""))
+            name = spool["name"] if spool else str(attrs.get("name") or "?")
+            if need and target < need - 5 and (worst is None or need > worst[0]):
+                worst = (need, name, tray.label)
+        await self._async_save()
+        if worst is None:
+            return
+        need, name, label = worst
+        number = printer.entities.get("target_bed_temperature")
+        if self.options.get(CONF_BED_AUTO) and number and self.can_control(printer):
+            try:
+                await self.hass.services.async_call("number", "set_value", {"entity_id": number, "value": need},
+                                                    blocking=True)
+                if self.options.get(CONF_NOTIFY_BED, True):
+                    await self.async_send_rich(
+                        self.options.get(CONF_NOTIFY_TARGETS, []),
+                        t(self.lang, "bed_auto_title", temp=need),
+                        [t(self.lang, "bed_auto_line", job=job.get("name") or "", target=round(target), temp=need,
+                           name=name, tray=label)], [])
+                return
+            except Exception as err:  # noqa: BLE001
+                _LOGGER.warning("Raising the bed temperature failed: %s", err)
+        if not self.options.get(CONF_NOTIFY_BED, True):
+            return
+        token = uuid.uuid4().hex[:10]
+        self._bed_buttons[token] = (printer.device_id, need)
+        buttons = [(t(self.lang, "bed_button", temp=need), token)] if self.can_control(printer) \
+            and printer.entities.get("target_bed_temperature") else []
+        plate = t(self.lang, "plate_" + self._plate(printer))
+        await self.async_send_rich(
+            self.options.get(CONF_NOTIFY_TARGETS, []),
+            t(self.lang, "bed_title"),
+            [t(self.lang, "bed_line", job=job.get("name") or "", target=round(target)),
+             t(self.lang, "bed_need", name=name, tray=label, temp=need, plate=plate)],
+            buttons,
+        )
+
+    async def async_send_rich(self, targets: list[str], title: str, lines: list[str],
+                              buttons: list[tuple[str, str]]) -> None:
+        """Message with optional buttons (HA app / Telegram), plain text elsewhere."""
+        for target in targets:
+            try:
+                phone, _apple = self._phone_service(target)
+                tg = self._telegram_entity(target)
+                if phone:
+                    await self.hass.services.async_call("notify", phone, {
+                        "title": title, "message": "\n".join(lines),
+                        "data": {"tag": f"{DOMAIN}_{uuid.uuid4().hex[:4]}", "group": DOMAIN, "channel": "Filament",
+                                 "importance": "high",
+                                 "actions": [{"action": f"BFM_{tok}", "title": lbl} for lbl, tok in buttons[:3]]},
+                    }, blocking=True)
+                elif tg:
+                    await self.hass.services.async_call("telegram_bot", "send_message", {
+                        "entity_id": tg, "message": self._tg_html(title, *lines), "parse_mode": "html",
+                        **({"inline_keyboard": [f"{lbl.replace(':', ' ').replace(',', ' ')}:/bfm {tok}" for lbl, tok in buttons]}
+                           if buttons else {}),
+                    }, blocking=True)
+                else:
+                    await self._notify_one(target, title, "\n".join(lines))
+            except Exception as err:  # noqa: BLE001
+                _LOGGER.warning("Notification via %s failed: %s", target, err)
+
+    async def _run_bed_button(self, token: str) -> tuple[str, str]:
+        printer_id, temp = self._bed_buttons.pop(token)
+        printer = next((p for p in self.printers if p.device_id == printer_id), None)
+        if printer is None or not printer.entities.get("target_bed_temperature"):
+            return t(self.lang, "btn_expired_title"), t(self.lang, "btn_expired")
+        if not self.can_control(printer):
+            return "⚠️", t(self.lang, "err_no_control")
+        await self.hass.services.async_call("number", "set_value", {
+            "entity_id": printer.entities["target_bed_temperature"], "value": temp}, blocking=True)
+        return t(self.lang, "bed_done_title", temp=temp), t(self.lang, "bed_done")
 
     def _live_consume(self, printer: Printer, job: dict[str, Any]) -> bool:
         """Subtract filament while printing, proportional to the print progress."""
@@ -1071,6 +1199,8 @@ class FilamentManager:
             d = p.as_dict()
             d["image"] = self.printer_image(p.model)
             d["can_control"] = self.can_control(p)
+            d["model_key"] = self._model_key(p)
+            d["plate"] = self._plate(p)
             d["job"] = self.jobs.get(p.device_id)
             for u in d["units"]:
                 for tr in u["trays"]:
@@ -1100,6 +1230,7 @@ class FilamentManager:
                 "vendor": info.get("filament_vendor") or "",
                 "type": info.get("filament_type") or "",
                 "min": info.get("nozzle_temperature_range_low"),
+                "bed": info.get("bed_temperature"),
                 "max": info.get("nozzle_temperature_range_high"),
             })
         out.sort(key=lambda x: (x["vendor"] != "Generic", x["vendor"], x["name"]))

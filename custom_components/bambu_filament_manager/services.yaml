@@ -7,6 +7,7 @@ add_spool:
     color: {example: FF0000FF, selector: {text: {}}}
     nozzle_min: {selector: {number: {min: 150, max: 350, unit_of_measurement: "°C"}}}
     nozzle_max: {selector: {number: {min: 150, max: 350, unit_of_measurement: "°C"}}}
+    bed_temp: {selector: {number: {min: 0, max: 130, unit_of_measurement: "°C", mode: box}}}
     spool_weight: {selector: {number: {min: 0, max: 1000, unit_of_measurement: g, mode: box}}}
     net_weight: {selector: {number: {min: 0, max: 5000, unit_of_measurement: g, mode: box}}}
     remaining: {selector: {number: {min: 0, max: 5000, unit_of_measurement: g, mode: box}}}
@@ -24,6 +25,7 @@ update_spool:
     color: {selector: {text: {}}}
     nozzle_min: {selector: {number: {min: 150, max: 350, unit_of_measurement: "°C"}}}
     nozzle_max: {selector: {number: {min: 150, max: 350, unit_of_measurement: "°C"}}}
+    bed_temp: {selector: {number: {min: 0, max: 130, unit_of_measurement: "°C", mode: box}}}
     spool_weight: {selector: {number: {min: 0, max: 1000, unit_of_measurement: g, mode: box}}}
     net_weight: {selector: {number: {min: 0, max: 5000, unit_of_measurement: g, mode: box}}}
     remaining: {selector: {number: {min: 0, max: 5000, unit_of_measurement: g, mode: box}}}
