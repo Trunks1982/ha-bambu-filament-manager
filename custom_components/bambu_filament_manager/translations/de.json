@@ -111,11 +111,13 @@
           "default_spool_weight": "Gewicht leere Spule (Standard)",
           "default_net_weight": "Filament auf neuer Rolle (Standard)",
           "track_bambu_spools": "Original-Bambu-Rollen (RFID) automatisch übernehmen",
-          "ignored_tags": "NFC-Aufkleber ignorieren"
+          "ignored_tags": "NFC-Aufkleber ignorieren",
+          "scan_targets": "Scan-Meldung mit Slot-Knöpfen senden an"
         },
         "data_description": {
           "ignored_tags": "Aufkleber, die du in HA selbst benannt hast, werden sowieso ignoriert. Automatisch benannte („Tag …“) hier eintragen, wenn sie zu etwas anderem gehören (z. B. Tür).",
-          "default_spool_weight": "Zum Ausrechnen des Rests beim Wiegen (Waage zeigt Rolle + Spule)."
+          "default_spool_weight": "Zum Ausrechnen des Rests beim Wiegen (Waage zeigt Rolle + Spule).",
+          "scan_targets": "Leer = an dieselben Ziele wie oben. Handy (HA-App) und Telegram bekommen Knöpfe für die Slots, alle anderen nur Text."
         }
       },
       "printer": {

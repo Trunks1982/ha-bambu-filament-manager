@@ -19,6 +19,7 @@ from .const import (
     CONF_NOTIFY_SUMMARY,
     CONF_NOTIFY_TARGETS,
     CONF_NOTIFY_UNKNOWN_TAG,
+    CONF_SCAN_TARGETS,
     CONF_TRACK_BAMBU_SPOOLS,
     DEFAULTS,
     DOMAIN,
@@ -226,7 +227,7 @@ class FilamentManagerOptionsFlow(CloudSteps, OptionsFlow):
         manager = getattr(self.config_entry, "runtime_data", None)
         choices: dict[str, str] = manager.notify_choices() if manager else {}
         # keep targets that are currently unavailable so they are not silently dropped
-        for target in opts[CONF_NOTIFY_TARGETS]:
+        for target in opts[CONF_NOTIFY_TARGETS] + opts[CONF_SCAN_TARGETS]:
             choices.setdefault(target, target)
 
         tag_choices: dict[str, str] = {}
@@ -260,6 +261,7 @@ class FilamentManagerOptionsFlow(CloudSteps, OptionsFlow):
         schema = vol.Schema(
             {
                 vol.Optional(CONF_NOTIFY_TARGETS, default=opts[CONF_NOTIFY_TARGETS]): multi(choices),
+                vol.Optional(CONF_SCAN_TARGETS, default=opts[CONF_SCAN_TARGETS]): multi(choices),
                 vol.Optional(CONF_NOTIFY_SCAN, default=opts[CONF_NOTIFY_SCAN]): bool,
                 vol.Optional(CONF_NOTIFY_UNKNOWN_TAG, default=opts[CONF_NOTIFY_UNKNOWN_TAG]): bool,
                 vol.Optional(CONF_NOTIFY_INSUFFICIENT, default=opts[CONF_NOTIFY_INSUFFICIENT]): bool,

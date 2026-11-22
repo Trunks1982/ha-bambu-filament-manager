@@ -111,11 +111,13 @@
           "default_spool_weight": "Empty spool weight (default)",
           "default_net_weight": "Filament on a new spool (default)",
           "track_bambu_spools": "Add original Bambu spools (RFID) automatically",
-          "ignored_tags": "Ignore NFC stickers"
+          "ignored_tags": "Ignore NFC stickers",
+          "scan_targets": "Send the scan message with slot buttons to"
         },
         "data_description": {
           "ignored_tags": "Stickers you named yourself in HA are ignored anyway. Add automatically named ones (“Tag …”) here if they belong to something else (e.g. a door).",
-          "default_spool_weight": "Used to compute the rest when weighing (scale shows filament + spool)."
+          "default_spool_weight": "Used to compute the rest when weighing (scale shows filament + spool).",
+          "scan_targets": "Empty = same targets as above. Phones (HA app) and Telegram get buttons for the slots, everything else text only."
         }
       },
       "printer": {

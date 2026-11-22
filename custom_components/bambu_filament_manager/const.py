@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 DOMAIN = "bambu_filament_manager"
-VERSION = "0.3.1"
+VERSION = "0.4.0"
 BAMBU_DOMAIN = "bambu_lab"
 
 STORAGE_KEY = DOMAIN
@@ -28,6 +28,7 @@ CONF_DEFAULT_SPOOL_WEIGHT = "default_spool_weight"
 CONF_DEFAULT_NET_WEIGHT = "default_net_weight"
 CONF_IGNORED_TAGS = "ignored_tags"
 CONF_TRACK_BAMBU_SPOOLS = "track_bambu_spools"
+CONF_SCAN_TARGETS = "scan_targets"
 
 DEFAULTS = {
     CONF_NOTIFY_TARGETS: [],
@@ -40,6 +41,7 @@ DEFAULTS = {
     CONF_DEFAULT_NET_WEIGHT: 1000,
     CONF_IGNORED_TAGS: [],
     CONF_TRACK_BAMBU_SPOOLS: True,
+    CONF_SCAN_TARGETS: [],
 }
 
 # Printer states (sensor with translation_key "print_status")

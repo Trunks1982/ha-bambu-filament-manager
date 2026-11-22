@@ -16,7 +16,7 @@ One setup dialog for printer and filament – the printer connection runs throug
 - **AMS card like the original**: spools in their real colors with the remaining amount, active slot, humidity/temperature, external spool, AMS HT. Printer picture, cover image of the print, progress, layer, remaining time, temperatures, optional camera.
 - **Spool inventory**: name, vendor, Bambu filament profile (catalog), color, nozzle temperatures, empty spool weight, remaining grams. Weighing: enter what the scale shows, the empty spool is subtracted.
 - **Load into a slot** with one tap – profile, color and temperatures are sent to the AMS (LAN developer mode, see below).
-- **NFC**: scan a sticker with the HA app → the spool is selected, tap a slot to load it. Unknown sticker → the card offers to create a new spool with it.
+- **NFC**: scan a sticker with the HA app → a message shows the spool (material, temperature, rest) with **slot buttons** – tap “A2” and the spool is loaded. Works in the HA app (Android: 3 buttons per page, “more ▸” pages through all slots; iPhone: all at once) and in Telegram. Tapping the message opens the card. Unknown sticker → the card offers to create a new spool with it.
 - **Live usage**: while printing, the grams are subtracted proportionally to the print progress. Cancelled prints only count the printed part. Survives restarts without double counting.
 - **Warnings**: “not enough filament for this print” at print start, “almost empty” after the print.
 - **Notifications** to any notification service set up in your HA (mobile app, Telegram, WhatsApp integrations, …) – text only, selectable in the options.

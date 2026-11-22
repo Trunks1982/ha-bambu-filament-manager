@@ -32,6 +32,7 @@ from .const import (
     CONF_NOTIFY_SUMMARY,
     CONF_NOTIFY_TARGETS,
     CONF_NOTIFY_UNKNOWN_TAG,
+    CONF_SCAN_TARGETS,
     CONF_TRACK_BAMBU_SPOOLS,
     DEFAULTS,
     DOMAIN,
@@ -101,6 +102,10 @@ class FilamentManager:
         self.printers: list[Printer] = []
         self.catalog: dict[str, Any] = {}
         self.images: dict[str, str] = {}
+        # buttons in scan messages: token -> (spool_id, tray entity_id); kept in memory only
+        self._buttons: dict[str, tuple[str, str]] = {}
+        self._scan_pages: dict[str, dict[str, Any]] = {}  # session -> {spool, choices, text}
+        self._card_url: str | None = None
         self._unsubs: list[CALLBACK_TYPE] = []
         self._state_unsub: CALLBACK_TYPE | None = None
         self._started_unsub: CALLBACK_TYPE | None = None
@@ -128,6 +133,8 @@ class FilamentManager:
         self.catalog = await self.hass.async_add_executor_job(self._load_catalog)
 
         self._unsubs.append(self.hass.bus.async_listen("tag_scanned", self._on_tag_scanned))
+        self._unsubs.append(self.hass.bus.async_listen("mobile_app_notification_action", self._on_phone_action))
+        self._unsubs.append(self.hass.bus.async_listen("telegram_callback", self._on_telegram_callback))
         self._unsubs.append(
             self.hass.bus.async_listen(er.EVENT_ENTITY_REGISTRY_UPDATED, self._on_registry_updated)
         )
@@ -343,30 +350,245 @@ class FilamentManager:
             out[f"service:{svc}"] = f"notify.{svc}"
         return out
 
+    async def _notify_one(self, target: str, title: str, message: str) -> None:
+        if target == "persistent":
+            await self.hass.services.async_call(
+                "persistent_notification", "create",
+                {"title": title, "message": message, "notification_id": f"{DOMAIN}_{uuid.uuid4().hex[:6]}"},
+                blocking=True,
+            )
+        elif target.startswith("entity:"):
+            await self.hass.services.async_call(
+                "notify", "send_message", {"entity_id": target[7:], "title": title, "message": message}, blocking=True
+            )
+        elif target.startswith("service:"):
+            svc = target[8:]
+            if self.hass.services.has_service("notify", svc):
+                await self.hass.services.async_call("notify", svc, {"title": title, "message": message}, blocking=True)
+
     async def async_notify(self, title: str, message: str) -> None:
         for target in self.options.get(CONF_NOTIFY_TARGETS, []):
             try:
-                if target == "persistent":
-                    await self.hass.services.async_call(
-                        "persistent_notification", "create",
-                        {"title": title, "message": message, "notification_id": f"{DOMAIN}_{uuid.uuid4().hex[:6]}"},
-                        blocking=True,
-                    )
-                elif target.startswith("entity:"):
-                    await self.hass.services.async_call(
-                        "notify", "send_message",
-                        {"entity_id": target[7:], "title": title, "message": message},
-                        blocking=True,
-                    )
-                elif target.startswith("service:"):
-                    svc = target[8:]
-                    if not self.hass.services.has_service("notify", svc):
-                        continue
-                    await self.hass.services.async_call(
-                        "notify", svc, {"title": title, "message": message}, blocking=True
-                    )
+                await self._notify_one(target, title, message)
             except Exception as err:  # noqa: BLE001 - a broken target must not stop the others
                 _LOGGER.warning("Notification via %s failed: %s", target, err)
+
+    # ------------------------------------------------------------------ scan message with slot buttons
+    def _phone_service(self, target: str) -> tuple[str | None, bool]:
+        """(legacy mobile_app notify service, is_apple) for a target, else (None, False)."""
+        from homeassistant.helpers import device_registry as dr  # noqa: PLC0415
+        from homeassistant.util import slugify  # noqa: PLC0415
+
+        if target.startswith("service:mobile_app_"):
+            svc = target[8:]
+            apple = False
+            for state in self.hass.states.async_all("notify"):
+                reg = er.async_get(self.hass).async_get(state.entity_id)
+                if reg and reg.platform == "mobile_app" and reg.device_id:
+                    dev = dr.async_get(self.hass).async_get(reg.device_id)
+                    if dev and f"mobile_app_{slugify(dev.name or '')}" == svc:
+                        apple = (dev.manufacturer or "").lower() == "apple"
+            return (svc if self.hass.services.has_service("notify", svc) else None), apple
+        if target.startswith("entity:"):
+            reg = er.async_get(self.hass).async_get(target[7:])
+            if reg and reg.platform == "mobile_app" and reg.device_id:
+                dev = dr.async_get(self.hass).async_get(reg.device_id)
+                if dev:
+                    for name in (dev.name_by_user, dev.name):
+                        svc = f"mobile_app_{slugify(name or '')}"
+                        if name and self.hass.services.has_service("notify", svc):
+                            return svc, (dev.manufacturer or "").lower() == "apple"
+        return None, False
+
+    def _telegram_entity(self, target: str) -> str | None:
+        if target.startswith("entity:"):
+            reg = er.async_get(self.hass).async_get(target[7:])
+            if reg and reg.platform == "telegram_bot" and self.hass.services.has_service("telegram_bot", "send_message"):
+                return target[7:]
+        return None
+
+    def _slot_choices(self, spool: dict[str, Any]) -> list[tuple[str, str, str]]:
+        """Trays the spool can go into, in AMS order: (tray entity_id, short text, long text).
+
+        Short text fits an Android button ("A1 · PETG"), long text is for Telegram.
+        """
+        out = []
+        for p in self.printers:
+            prefix = f"{p.name} " if len(self.printers) > 1 else ""
+            for tr in p.trays:
+                attrs = self._tray_attrs(tr)
+                if not attrs or self._bambu_uuid(attrs):
+                    continue
+                sp, _src = self.resolve_tray(tr)
+                if sp is not None and sp["id"] == spool["id"]:
+                    continue
+                if attrs.get("empty"):
+                    short = long = f"{prefix}{tr.label} · {t(self.lang, 'btn_empty')}"
+                else:
+                    short = f"{prefix}{tr.label} · {sp.get('material') if sp else attrs.get('type') or '?'}"
+                    long = f"{prefix}{tr.label} · {sp['name'] if sp else attrs.get('name') or '?'}"
+                out.append((tr.entity_id, short[:24], long[:40]))
+        return out
+
+    def _button(self, spool_id: str, tray_entity: str) -> str:
+        token = uuid.uuid4().hex[:10]
+        if len(self._buttons) > 200:
+            self._buttons.clear()
+        self._buttons[token] = (spool_id, tray_entity)
+        return token
+
+    async def _find_card_url(self) -> str | None:
+        """Dashboard view that contains our card (for 'tap the message to open')."""
+        try:
+            lovelace = self.hass.data.get("lovelace")
+            dashboards = getattr(lovelace, "dashboards", None) or {}
+            for url_path, dash in dashboards.items():
+                try:
+                    cfg = await dash.async_load(False)
+                except Exception:  # noqa: BLE001
+                    continue
+                for idx, view in enumerate(cfg.get("views", []) if isinstance(cfg, dict) else []):
+                    if "bambu-filament-card" in json.dumps(view):
+                        return f"/{url_path or 'lovelace'}/{view.get('path', idx)}"
+        except Exception as err:  # noqa: BLE001
+            _LOGGER.debug("Card lookup failed: %s", err)
+        return None
+
+    def _phone_payload(self, session: str, page: int) -> dict[str, Any]:
+        info = self._scan_pages[session]
+        choices = info["choices"]
+        if len(choices) <= 3:
+            shown, nav = [(c[0], c[1]) for c in choices], None
+        else:
+            # Android allows only 3 buttons: 2 slots + "more" per page
+            pages = (len(choices) + 1) // 2
+            page = page % pages
+            shown = [(c[0], c[1]) for c in choices[page * 2: page * 2 + 2]]
+            if page + 1 < pages:
+                rest = [c[1].split(" · ")[0] for c in choices[(page + 1) * 2:]]
+                nav = (f"BFM_PAGE_{session}_{page + 1}", f"{' / '.join(rest[:3])} ▸")
+            else:
+                nav = (f"BFM_PAGE_{session}_0", f"◂ {t(self.lang, 'btn_back')}")
+        actions = [{"action": f"BFM_{self._button(info['spool'], eid)}", "title": text} for eid, text in shown]
+        if nav:
+            actions.append({"action": nav[0], "title": nav[1]})
+        data: dict[str, Any] = {"tag": f"{DOMAIN}_scan", "group": DOMAIN, "channel": "Filament",
+                                "importance": "high", "actions": actions}
+        if page:
+            data["alert_once"] = True  # paging must not ring again
+        if self._card_url:
+            data["clickAction"] = self._card_url
+            data["url"] = self._card_url
+        return {"title": info["title"], "message": info["text"], "data": data}
+
+    async def async_notify_scan(self, spool: dict[str, Any]) -> None:
+        """Easy to read message with slot buttons (HA app and Telegram), plain text elsewhere."""
+        rest = round(_num(spool.get("remaining")))
+        line1 = t(self.lang, "scan_line", material=spool.get("material") or "?",
+                  tmin=spool.get("nozzle_min"), tmax=spool.get("nozzle_max"), rest=rest)
+        loc = self.spool_location(spool["id"])
+        line2 = t(self.lang, "scan_loc", tray=loc["tray"]) if loc else ""
+        title = f"🎨 {spool['name']}"
+        choices = self._slot_choices(spool)
+        targets = self.options.get(CONF_SCAN_TARGETS) or self.options.get(CONF_NOTIFY_TARGETS, [])
+        if self._card_url is None:
+            self._card_url = await self._find_card_url() or ""
+        for target in targets:
+            try:
+                phone, apple = self._phone_service(target)
+                tg = self._telegram_entity(target)
+                if phone:
+                    hint = t(self.lang, "scan_pick" if choices else "scan_no_slot")
+                    session = uuid.uuid4().hex[:8]
+                    if len(self._scan_pages) > 50:
+                        self._scan_pages.clear()
+                    self._scan_pages[session] = {
+                        "spool": spool["id"], "title": title, "phone": phone,
+                        "choices": choices[:10],
+                        "text": "\n".join(x for x in (line1, line2, hint) if x),
+                    }
+                    payload = self._phone_payload(session, 0)
+                    if apple:  # iOS shows up to 10 actions – no paging needed
+                        payload["data"]["actions"] = [
+                            {"action": f"BFM_{self._button(spool['id'], c[0])}", "title": c[2]} for c in choices[:10]
+                        ]
+                    await self.hass.services.async_call("notify", phone, payload, blocking=True)
+                elif tg:
+                    rows = []
+                    pair: list[str] = []
+                    for eid, _short, text in choices[:12]:
+                        pair.append(f"{text.replace(':', ' ').replace(',', ' ')}:/bfm {self._button(spool['id'], eid)}")
+                        if len(pair) == 2:
+                            rows.append(", ".join(pair)); pair = []
+                    if pair:
+                        rows.append(", ".join(pair))
+                    hint = t(self.lang, "scan_pick" if rows else "scan_no_slot")
+                    await self.hass.services.async_call("telegram_bot", "send_message", {
+                        "entity_id": tg, "title": title,
+                        "message": "\n".join(x for x in (line1, line2, hint) if x),
+                        **({"inline_keyboard": rows} if rows else {}),
+                    }, blocking=True)
+                else:
+                    await self._notify_one(target, title, "\n".join(x for x in (line1, line2) if x))
+            except Exception as err:  # noqa: BLE001
+                _LOGGER.warning("Scan message via %s failed: %s", target, err)
+
+    async def _assign_from_button(self, token: str) -> tuple[str, str]:
+        """Run a button: returns (title, message) for the answer."""
+        entry = self._buttons.pop(token, None)
+        if entry is None:
+            return t(self.lang, "btn_expired_title"), t(self.lang, "btn_expired")
+        spool_id, tray_entity = entry
+        spool = self.spools.get(spool_id)
+        found = self.find_tray(tray_entity)
+        if spool is None or found is None:
+            return t(self.lang, "btn_expired_title"), t(self.lang, "btn_expired")
+        printer, tray = found
+        try:
+            await self.async_assign(tray_entity, spool_id)
+        except HomeAssistantError as err:
+            return f"⚠️ {spool['name']}", str(err)
+        msg = t(self.lang, "btn_sent" if self.can_control(printer) else "btn_linked")
+        return f"✅ {spool['name']} → {tray.label}", msg
+
+    async def _on_phone_action(self, event: Event) -> None:
+        action = str(event.data.get("action") or "")
+        if not action.startswith("BFM_"):
+            return
+        if action.startswith("BFM_PAGE_"):
+            _, _, session, page = action.split("_", 3)
+            info = self._scan_pages.get(session)
+            if info is not None:
+                await self.hass.services.async_call("notify", info["phone"], self._phone_payload(session, int(page)),
+                                                    blocking=False)
+            return
+        title, msg = await self._assign_from_button(action[4:])
+        targets = self.options.get(CONF_SCAN_TARGETS) or self.options.get(CONF_NOTIFY_TARGETS, [])
+        for target in targets:
+            phone, _apple = self._phone_service(target)
+            if phone:
+                await self.hass.services.async_call("notify", phone, {
+                    "title": title, "message": msg,
+                    "data": {"tag": f"{DOMAIN}_scan", "group": DOMAIN, "channel": "Filament", "timeout": 600},
+                }, blocking=False)
+
+    async def _on_telegram_callback(self, event: Event) -> None:
+        data = str(event.data.get("data") or "")
+        if not data.startswith("/bfm "):
+            return
+        title, msg = await self._assign_from_button(data[5:].strip())
+        try:
+            await self.hass.services.async_call("telegram_bot", "answer_callback_query", {
+                "callback_query_id": event.data.get("id"), "message": title[:180],
+            }, blocking=False)
+            message = event.data.get("message") or {}
+            if message.get("message_id") and event.data.get("chat_id"):
+                await self.hass.services.async_call("telegram_bot", "edit_message", {
+                    "message_id": message["message_id"], "chat_id": event.data["chat_id"],
+                    "title": title, "message": msg, "inline_keyboard": [],
+                }, blocking=False)
+        except Exception as err:  # noqa: BLE001
+            _LOGGER.debug("Telegram answer failed: %s", err)
 
     # ------------------------------------------------------------------ spools
     def _clean_fields(self, data: dict[str, Any]) -> dict[str, Any]:
@@ -585,13 +807,7 @@ class FilamentManager:
             await self._changed()
             self.hass.bus.async_fire(EVENT_SCANNED, {"spool_id": spool["id"], "name": spool["name"], "tag_id": tag_id})
             if self.options[CONF_NOTIFY_SCAN]:
-                loc = self.spool_location(spool["id"])
-                msg = t(self.lang, "scan_msg", material=spool.get("material", ""),
-                        tmin=spool.get("nozzle_min"), tmax=spool.get("nozzle_max"),
-                        rest=round(_num(spool.get("remaining"))))
-                if loc:
-                    msg += "\n" + t(self.lang, "scan_loc", tray=loc["tray"])
-                await self.async_notify(t(self.lang, "scan_title", name=spool["name"]), msg)
+                await self.async_notify_scan(spool)
             return
         # Tags the user gave a real name belong to something else (door, light ...).
         # The companion app names new tags "Tag <id>" by itself – those still count as unknown.
