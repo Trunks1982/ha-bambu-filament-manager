@@ -516,7 +516,7 @@ class FilamentManager:
                 elif tg:
                     rows = []
                     pair: list[str] = []
-                    for eid, _short, text in choices[:12]:
+                    for eid, _short, text in choices:
                         pair.append(f"{text.replace(':', ' ').replace(',', ' ')}:/bfm {self._button(spool['id'], eid)}")
                         if len(pair) == 2:
                             rows.append(", ".join(pair)); pair = []

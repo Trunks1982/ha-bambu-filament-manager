@@ -26,7 +26,7 @@ PRINTER_KEYS = {
 }
 UNIT_KEYS = {
     "humidity", "humidity_index", "ams_temp", "drying", "remaining_drying_time",
-    "ams_status", "active_ams",
+    "ams_status", "active_ams", "drying_temperature", "drying_duration", "drying_filament",
 }
 
 _AMS_RE = re.compile(r"_AMS_(\d+|3H)$")

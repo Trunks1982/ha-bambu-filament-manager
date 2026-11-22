@@ -24,6 +24,10 @@ const I18N = {
     no_control: "The printer does not accept commands from Home Assistant (only in LAN developer mode). The spool is only linked – set color and filament profile on the printer or in Bambu Handy.", saved: "Saved", sent: "sent to the printer", camera: "Camera", show_all: "Show all", used_up: "used up",
     rest_after: "after this print", low: "almost empty", sort: "Sort", by_name: "Name", by_rest: "Remaining", by_color: "Color", hide_empty: "Hide empty spools",
     printer: "Printer", show_camera: "Show camera", show_spools: "Show spool list",
+    dry: "Dry", dry_title: "Dry filament", dry_temp: "Temperature", dry_time: "Duration", hours: "h", rotate: "Rotate spools while drying",
+    dry_start: "Start drying", dry_stop: "Stop", drying_left: "left", dry_rec: "Recommended by the loaded spools", dry_max: "max.",
+    dry_pla: "PLA is loaded in this AMS – too much heat can deform filament and spools. Check the recommendation of the spool.",
+    dry_printing: "The printer is printing – drying may be refused or slow down the print.", dry_started: "Drying started", dry_stopped: "Drying stopped",
   },
   de: {
     status: { running: "Druckt", pause: "Pausiert", finish: "Fertig", failed: "Fehlgeschlagen", idle: "Bereit", prepare: "Vorbereitung", slicing: "Slicen", init: "Startet", offline: "Offline", unknown: "Unbekannt" },
@@ -44,6 +48,10 @@ const I18N = {
     no_control: "Der Drucker nimmt keine Befehle von Home Assistant an (nur im LAN-Entwicklermodus). Die Rolle wird nur verknüpft – Farbe und Filament-Profil bitte am Drucker oder in Bambu Handy einstellen.", saved: "Gespeichert", sent: "an den Drucker geschickt", camera: "Kamera", show_all: "Alle zeigen", used_up: "verbraucht",
     rest_after: "nach diesem Druck", low: "fast leer", sort: "Sortieren", by_name: "Name", by_rest: "Rest", by_color: "Farbe", hide_empty: "Leere Rollen ausblenden",
     printer: "Drucker", show_camera: "Kamera zeigen", show_spools: "Rollenliste zeigen",
+    dry: "Trocknen", dry_title: "Filament trocknen", dry_temp: "Temperatur", dry_time: "Dauer", hours: "h", rotate: "Spulen beim Trocknen drehen",
+    dry_start: "Trocknen starten", dry_stop: "Stopp", drying_left: "noch", dry_rec: "Empfehlung der eingelegten Rollen", dry_max: "max.",
+    dry_pla: "In diesem AMS steckt PLA – zu viel Hitze kann Filament und Spulen verformen. Bitte die Empfehlung der Rolle beachten.",
+    dry_printing: "Der Drucker druckt gerade – das Trocknen wird evtl. abgelehnt oder bremst den Druck.", dry_started: "Trocknung gestartet", dry_stopped: "Trocknung gestoppt",
   },
 };
 
@@ -280,6 +288,8 @@ class BambuFilamentCard extends HTMLElement {
       const ue = u.entities;
       const hum = this._sv(ue.humidity), temp = this._sv(ue.ams_temp);
       const drying = this._sv(ue.drying) === "on";
+      const canDry = !mini && ["AMS 2 Pro", "AMS HT"].includes(u.model);
+      const dryInfo = drying ? this._dryInfo(u) : "";
       const humN = num(hum, NaN);
       const humCls = isNaN(humN) ? "" : humN < 40 ? "ok" : humN < 60 ? "mid" : "bad";
       const ext = u.kind === "external";
@@ -287,7 +297,9 @@ class BambuFilamentCard extends HTMLElement {
         <div class="ams-h"><span class="un">${esc(ext ? (u.name) : u.name)}</span>${!ext && u.model ? `<span class="model">${esc(u.model)}</span>` : ""}
           <span class="env">${hum !== undefined && hum !== "unavailable" ? `<span class="hum ${humCls}"><ha-icon icon="mdi:water-percent"></ha-icon>${esc(hum)}%</span>` : ""}
           ${temp !== undefined && temp !== "unavailable" ? `<span><ha-icon icon="mdi:thermometer"></ha-icon>${Math.round(num(temp))}°</span>` : ""}
-          ${drying ? `<span class="dry"><ha-icon icon="mdi:fan"></ha-icon>${esc(t.drying)}</span>` : ""}</span></div>
+          ${canDry && !drying ? `<button class="btn flat sm" data-a="dry-open" data-dev="${esc(u.device_id)}"><ha-icon icon="mdi:heat-wave"></ha-icon>${esc(t.dry)}</button>` : ""}</span></div>
+        ${drying ? `<div class="dryrow"><ha-icon icon="mdi:fan" class="spin"></ha-icon><span>${esc(t.drying)}${dryInfo ? ` · ${esc(dryInfo)}` : ""}</span>
+          ${canDry ? `<button class="btn sm danger" data-a="dry-stop" data-dev="${esc(u.device_id)}">${esc(t.dry_stop)}</button>` : ""}</div>` : ""}
         <div class="slots">${u.trays.map((tr) => {
           const v = this._trayView(tr);
           const need = job[tr.key] >= 0.5 ? job[tr.key] : 0;
@@ -348,7 +360,7 @@ class BambuFilamentCard extends HTMLElement {
   _renderDialog() {
     const root = this.shadowRoot.getElementById("dlg");
     if (!this._dialog) { root.innerHTML = ""; return; }
-    const html = this._dialog.type === "slot" ? this._slotDialog() : this._editDialog();
+    const html = this._dialog.type === "slot" ? this._slotDialog() : this._dialog.type === "dry" ? this._dryDialog() : this._editDialog();
     root.innerHTML = `<div class="overlay" data-a="overlay"><div class="dialog" role="dialog">${html}</div></div>`;
   }
 
@@ -443,6 +455,51 @@ class BambuFilamentCard extends HTMLElement {
       </div>`;
   }
 
+  _dryInfo(u) {
+    const t = this._t, ue = u.entities;
+    const parts = [];
+    const temp = this._sv(ue.drying_temperature);
+    if (temp && !isNaN(parseFloat(temp))) parts.push(`${Math.round(num(temp))} °C`);
+    const rs = this._st(ue.remaining_drying_time);
+    if (rs && !isNaN(parseFloat(rs.state))) {
+      let min = num(rs.state) * ((rs.attributes.unit_of_measurement || "h") === "h" ? 60 : rs.attributes.unit_of_measurement === "s" ? 1 / 60 : 1);
+      if (min > 0) parts.push(`${t.drying_left} ${min >= 60 ? `${Math.floor(min / 60)} h ` : ""}${Math.round(min % 60)} min`);
+    }
+    return parts.join(" · ");
+  }
+
+  _dryUnit() { return this._printer.units.find((x) => x.device_id === this._dialog.dev); }
+
+  _dryDialog() {
+    const t = this._t, d = this._dialog, u = this._dryUnit(), p = this._printer;
+    if (!u) return "";
+    const max = u.model === "AMS HT" ? 85 : 65;
+    const recs = [];
+    let pla = false;
+    u.trays.forEach((tr) => {
+      const a = this._st(tr.entity_id)?.attributes || {};
+      if (a.empty) return;
+      if (String(a.type || "").toUpperCase().startsWith("PLA")) pla = true;
+      if (num(a.dry_temp) > 0) recs.push(`${tr.label} ${esc(a.type || "")}: ${Math.round(num(a.dry_temp))} °C${num(a.dry_time) > 0 ? ` / ${Math.round(num(a.dry_time))} ${t.hours}` : ""}`);
+    });
+    const printing = ["running", "pause", "prepare"].includes(this._sv(p.entities.print_status));
+    const chips = [45, 50, 55, 60, 65, 70, 75, 80, 85].filter((x) => x <= max);
+    return `<div class="dh"><ha-icon icon="mdi:heat-wave" style="--mdc-icon-size:32px;color:#e07020"></ha-icon><div><div class="dt">${esc(t.dry_title)}</div><div class="ds">${esc(u.name)} · ${esc(u.model)} · ${esc(t.dry_max)} ${max} °C</div></div>
+      <button class="icon-btn" data-a="close"><ha-icon icon="mdi:close"></ha-icon></button></div>
+      <div class="dbody form">
+        ${p.can_control === false ? `<div class="note warn"><ha-icon icon="mdi:lock-outline"></ha-icon> ${esc(t.no_control)}</div>` : ""}
+        ${recs.length ? `<div class="note"><b>${esc(t.dry_rec)}:</b><br>${recs.join("<br>")}</div>` : ""}
+        <label>${esc(t.dry_temp)}: <b id="drytv">${d.temp} °C</b><input type="range" min="45" max="${max}" step="1" data-f="dry_temp" value="${d.temp}" class="range"></label>
+        <div class="chips">${chips.map((c) => `<span class="chipbtn ${c === d.temp ? "on" : ""}" data-a="dry-chip" data-v="${c}">${c} °C</span>`).join("")}</div>
+        <label>${esc(t.dry_time)}: <b id="drydv">${d.hours} ${esc(t.hours)}</b><input type="range" min="1" max="24" step="1" data-f="dry_hours" value="${d.hours}" class="range"></label>
+        <label class="chk"><input type="checkbox" data-f="dry_rotate" ${d.rotate ? "checked" : ""}> ${esc(t.rotate)}</label>
+        ${pla && d.temp > 55 ? `<div class="note warn">${esc(t.dry_pla)}</div>` : ""}
+        ${printing ? `<div class="note warn">${esc(t.dry_printing)}</div>` : ""}
+        <div class="err" id="err"></div>
+        <div class="dact"><button class="btn" data-a="dry-start" ${p.can_control === false ? "disabled" : ""}><ha-icon icon="mdi:play"></ha-icon>${esc(t.dry_start)}</button></div>
+      </div>`;
+  }
+
   async _openEdit(id, preset = {}) {
     await this._loadCatalog();
     const d = this._data;
@@ -483,6 +540,12 @@ class BambuFilamentCard extends HTMLElement {
   // ------------------------------------------------------------------ events
   _onInput(e) {
     const el = e.target;
+    if (this._dialog?.type === "dry" && el.dataset.f) {
+      if (el.dataset.f === "dry_temp") { this._dialog.temp = parseInt(el.value, 10); const v = this.shadowRoot.getElementById("drytv"); if (v) v.textContent = `${el.value} °C`;
+        this.shadowRoot.querySelectorAll("#dlg .chipbtn").forEach((c) => c.classList.toggle("on", c.dataset.v === el.value)); }
+      if (el.dataset.f === "dry_hours") { this._dialog.hours = parseInt(el.value, 10); const v = this.shadowRoot.getElementById("drydv"); if (v) v.textContent = `${el.value} ${this._t.hours}`; }
+      return;
+    }
     if (el.dataset.a === "q" && this._dialog) {
       this._dialog.q = el.value;
       const pos = el.selectionStart;
@@ -526,6 +589,11 @@ class BambuFilamentCard extends HTMLElement {
 
   _onChange(e) {
     const el = e.target;
+    if (this._dialog?.type === "dry") {
+      if (el.dataset.f === "dry_rotate") this._dialog.rotate = el.checked;
+      if (el.dataset.f === "dry_temp") this._renderDialog();  // refresh PLA warning
+      return;
+    }
     if (el.dataset.f === "vendor" && this._dialog?.type === "edit" && !this._dialog.id) {
       const w = this._vendorSpoolWeight(el.value);
       const sw = this.shadowRoot.querySelector('#dlg [data-f="spool_weight"]');
@@ -579,6 +647,29 @@ class BambuFilamentCard extends HTMLElement {
           const label = this._printer.units.flatMap((u) => u.trays).find((x) => x.entity_id === this._dialog.tray)?.label || "";
           this._dialog = null; this._renderDialog(); this._toast(`${s?.name || ""} → ${label} ${this._printer.can_control === false ? t.linked_only : t.sent}`);
         }
+        break;
+      }
+      case "dry-open": {
+        const u = this._printer.units.find((x) => x.device_id === el.dataset.dev);
+        let rec = 0, hrs = 0;
+        (u?.trays || []).forEach((tr) => { const a = this._st(tr.entity_id)?.attributes || {}; if (!a.empty) { rec = Math.max(rec, num(a.dry_temp)); hrs = Math.max(hrs, num(a.dry_time)); } });
+        const max = u?.model === "AMS HT" ? 85 : 65;
+        this._dialog = { type: "dry", dev: el.dataset.dev, temp: Math.min(max, Math.max(45, Math.round(rec) || 45)), hours: Math.min(24, Math.max(1, Math.round(hrs) || 4)), rotate: false };
+        this._renderDialog();
+        break;
+      }
+      case "dry-chip": this._dialog.temp = parseInt(el.dataset.v, 10); this._renderDialog(); break;
+      case "dry-start": {
+        const d = this._dialog;
+        try {
+          await this._hass.callService("bambu_lab", "start_filament_drying", { device_id: d.dev, temp: d.temp, duration: d.hours, rotate_tray: !!d.rotate });
+          this._dialog = null; this._renderDialog(); this._toast(`${t.dry_started}: ${d.temp} °C · ${d.hours} ${t.hours}`);
+        } catch (err) { this._err(err?.message || String(err)); }
+        break;
+      }
+      case "dry-stop": {
+        try { await this._hass.callService("bambu_lab", "stop_filament_drying", { device_id: el.dataset.dev }); this._toast(t.dry_stopped); }
+        catch (err) { this._toast(err?.message || String(err)); }
         break;
       }
       case "unlink": if (await this._call("unassign_tray", { tray: this._dialog.tray })) { this._dialog = null; this._renderDialog(); } break;
@@ -646,7 +737,7 @@ ha-icon{--mdc-icon-size:16px;vertical-align:-3px}
 .ams{flex:1 1 220px;min-width:0;box-sizing:border-box;background:var(--bfc-panel);border-radius:14px;padding:10px 10px 8px}
 .ams.ext,.ams.ams_ht{flex:0 0 66px;padding:10px 6px 8px}.ams.ext .slot,.ams.ams_ht .slot{min-width:0}
 .ams-h{display:flex;align-items:center;gap:6px;font-size:.85em;margin-bottom:8px;flex-wrap:wrap}
-.un{font-weight:700}.model{color:var(--bfc-sub)}.env{margin-left:auto;display:flex;gap:8px;color:var(--bfc-sub)}
+.un{font-weight:700}.model{color:var(--bfc-sub)}.env{margin-left:auto;display:flex;gap:8px;color:var(--bfc-sub);align-items:center;flex-wrap:wrap;justify-content:flex-end}.env>span{white-space:nowrap}
 .hum.ok{color:#2fbf5b}.hum.mid{color:#e0a020}.hum.bad{color:#e04040}.dry{color:#e07020}
 .slots{display:flex;gap:8px}
 .slot{flex:1 1 0;min-width:42px;box-sizing:border-box;max-width:90px;text-align:center;cursor:pointer;border-radius:10px;padding:4px 2px;transition:background .15s;-webkit-tap-highlight-color:transparent;user-select:none}
@@ -700,7 +791,7 @@ input[type=color]{width:34px;height:30px;border:none;background:none;padding:0;c
 .dact{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:center}
 .confirm{margin-top:12px;padding:10px;border-radius:10px;background:rgba(224,64,64,.12)}
 .chk{display:flex!important;gap:6px;align-items:center;color:var(--bfc-text)!important}
-.hint{font-size:.85em;opacity:.8}.err{color:#e04040;font-size:.85em;margin-top:8px;min-height:1em}
+.hint{font-size:.85em;opacity:.8}.range{width:100%;margin-top:6px;accent-color:#e07020}.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.chipbtn{padding:4px 10px;border-radius:14px;background:var(--bfc-panel);cursor:pointer;font-size:.85em;border:1px solid var(--divider-color,#555)}.chipbtn.on{background:#e07020;color:#fff;border-color:#e07020}.btn:disabled{opacity:.5;cursor:not-allowed}.dryrow{display:flex;align-items:center;gap:6px;margin:-2px 0 8px;padding:6px 8px;border-radius:10px;background:rgba(224,112,32,.14);color:#e07020;font-size:.85em;font-weight:600}.dryrow span{flex:1}.spin{animation:bfcspin 2s linear infinite}@keyframes bfcspin{to{transform:rotate(360deg)}}.err{color:#e04040;font-size:.85em;margin-top:8px;min-height:1em}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);background:#323232;color:#fff;padding:10px 16px;border-radius:10px;z-index:10000;opacity:0;transition:all .25s;pointer-events:none;max-width:90vw}
 #toast.show{transform:translateX(-50%);opacity:1}
 `;
