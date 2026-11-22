@@ -11,16 +11,23 @@ One setup dialog for printer and filament – the printer connection runs throug
   <img src="docs/new-spool.png" width="24%" alt="New spool with scale and color">
   <img src="docs/card-dark-spools.png" width="24%" alt="Dark theme with spool list">
 </p>
+<p align="center">
+  <img src="docs/drying.png" width="32%" alt="AMS drying with temperature">
+  <img src="docs/card-picker.png" width="26%" alt="Live preview in the card picker">
+</p>
 
 ## Features
 - **AMS card like the original**: spools in their real colors with the remaining amount, active slot, humidity/temperature, external spool, AMS HT. Printer picture, cover image of the print, progress, layer, remaining time, temperatures, optional camera.
 - **Spool inventory**: name, vendor, Bambu filament profile (catalog), color, nozzle temperatures, empty spool weight, remaining grams. Weighing: enter what the scale shows, the empty spool is subtracted.
 - **Load into a slot** with one tap – profile, color and temperatures are sent to the AMS (LAN developer mode, see below).
-- **NFC**: scan a sticker with the HA app → a message shows the spool (material, temperature, rest) with **slot buttons** – tap “A2” and the spool is loaded. Works in the HA app (Android: 3 buttons per page, “more ▸” pages through all slots; iPhone: all at once) and in Telegram. Tapping the message opens the card. Unknown sticker → the card offers to create a new spool with it.
+- **NFC**: scan a sticker with the HA app → a message shows the spool (material, temperature, rest) with **slot buttons** in AMS order – tap “A2” and the spool is loaded, the same message confirms it.
+  - HA app on Android: Android allows only 3 buttons, so each page shows 2 slots + “more ▸”; paging updates the same message without a new sound. iPhone: all slots at once.
+  - Telegram: one button per slot with the full spool name and its rest; the slot the spool is already in is marked “✓”.
+  - Tapping the message opens the card with the spool selected. Unknown sticker → the card offers to create a new spool with it.
 - **AMS drying** (AMS 2 Pro up to 65 °C, AMS HT up to 85 °C): temperature, duration and spool rotation, with the recommendation of the loaded spools and a warning for PLA. While drying the card shows the remaining time and a stop button (LAN developer mode).
 - **Live usage**: while printing, the grams are subtracted proportionally to the print progress. Cancelled prints only count the printed part. Survives restarts without double counting.
 - **Warnings**: “not enough filament for this print” at print start, “almost empty” after the print.
-- **Notifications** to any notification service set up in your HA (mobile app, Telegram, WhatsApp integrations, …) – text only, selectable in the options.
+- **Notifications** to any notification service set up in your HA (mobile app, Telegram, WhatsApp integrations, …), selectable in the options: usage after each print, “not enough filament”, “almost empty”, unknown NFC sticker. The scan message can go to its own targets (e.g. phone), everything else e.g. to Telegram. Phones and Telegram get buttons, all other services plain text.
 - **Original Bambu spools (RFID)** are added automatically; the AMS reports their rest.
 - Sensors per spool and per slot, events, and actions (`bambu_filament_manager.add_spool`, `assign_spool`, `weigh_spool`, …) for your own automations.
 
@@ -38,7 +45,11 @@ One setup dialog for printer and filament – the printer connection runs throug
 
 Filament usage per print needs the 3MF to be readable by ha-bambulab (on printers without SD card: USB stick and “store sent files on external storage” in Bambu Studio).
 
-Add the card in the dashboard: “Bambu Filament” (`type: custom:bambu-filament-card`). It is loaded automatically – no resource needed.
+Add the card in the dashboard: *Add card → By card → Community cards →* **“Bambu Filament”** (with live preview) or `type: custom:bambu-filament-card`. It is loaded automatically – no resource needed.
+
+**Options** (integration → *Configure*):
+- *Settings*: notification targets, scan message targets, which messages, “almost empty” threshold, default empty spool weight and filament amount, add original Bambu spools automatically, NFC stickers to ignore.
+- *Add printer – local (LAN)* or *Add printer – Bambu Cloud*.
 
 ```yaml
 type: custom:bambu-filament-card

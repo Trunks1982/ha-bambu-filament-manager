@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 DOMAIN = "bambu_filament_manager"
-VERSION = "0.5.1"
+VERSION = "0.5.2"
 BAMBU_DOMAIN = "bambu_lab"
 
 STORAGE_KEY = DOMAIN

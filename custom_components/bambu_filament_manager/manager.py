@@ -407,10 +407,11 @@ class FilamentManager:
                 return target[7:]
         return None
 
-    def _slot_choices(self, spool: dict[str, Any]) -> list[tuple[str, str, str]]:
+    def _slot_choices(self, spool: dict[str, Any], include_here: bool = False) -> list[tuple[str, str, str]]:
         """Trays the spool can go into, in AMS order: (tray entity_id, short text, long text).
 
         Short text fits an Android button ("A1 · PETG"), long text is for Telegram.
+        With include_here the slot the spool already sits in is listed with entity_id "".
         """
         out = []
         for p in self.printers:
@@ -421,13 +422,18 @@ class FilamentManager:
                     continue
                 sp, _src = self.resolve_tray(tr)
                 if sp is not None and sp["id"] == spool["id"]:
+                    if include_here:
+                        here = f"{prefix}{tr.label} · {t(self.lang, 'btn_here')}"
+                        out.append(("", here, here))
                     continue
                 if attrs.get("empty"):
                     short = long = f"{prefix}{tr.label} · {t(self.lang, 'btn_empty')}"
                 else:
                     short = f"{prefix}{tr.label} · {sp.get('material') if sp else attrs.get('type') or '?'}"
                     long = f"{prefix}{tr.label} · {sp['name'] if sp else attrs.get('name') or '?'}"
-                out.append((tr.entity_id, short[:24], long[:40]))
+                    if sp is not None:
+                        long += f" · {round(_num(sp.get('remaining')))} g"
+                out.append((tr.entity_id, short[:24], long[:60]))
         return out
 
     def _button(self, spool_id: str, tray_entity: str) -> str:
@@ -514,24 +520,29 @@ class FilamentManager:
                         ]
                     await self.hass.services.async_call("notify", phone, payload, blocking=True)
                 elif tg:
+                    # one button per row, so the full spool name is readable
                     rows = []
-                    pair: list[str] = []
-                    for eid, _short, text in choices:
-                        pair.append(f"{text.replace(':', ' ').replace(',', ' ')}:/bfm {self._button(spool['id'], eid)}")
-                        if len(pair) == 2:
-                            rows.append(", ".join(pair)); pair = []
-                    if pair:
-                        rows.append(", ".join(pair))
-                    hint = t(self.lang, "scan_pick" if rows else "scan_no_slot")
+                    for eid, _short, text in self._slot_choices(spool, include_here=True):
+                        label = text.replace(":", " ").replace(",", " ")
+                        cmd = f"/bfm {self._button(spool['id'], eid)}" if eid else "/bfm here"
+                        rows.append(f"{label}:{cmd}")
+                    hint = t(self.lang, "scan_pick" if choices else "scan_no_slot")
                     await self.hass.services.async_call("telegram_bot", "send_message", {
-                        "entity_id": tg, "title": title,
-                        "message": "\n".join(x for x in (line1, line2, hint) if x),
+                        "entity_id": tg,
+                        "message": self._tg_html(title, line1, line2, hint),
+                        "parse_mode": "html",
                         **({"inline_keyboard": rows} if rows else {}),
                     }, blocking=True)
                 else:
                     await self._notify_one(target, title, "\n".join(x for x in (line1, line2) if x))
             except Exception as err:  # noqa: BLE001
                 _LOGGER.warning("Scan message via %s failed: %s", target, err)
+
+    @staticmethod
+    def _tg_html(title: str, *lines: str) -> str:
+        from html import escape  # noqa: PLC0415
+
+        return "\n".join([f"<b>{escape(title)}</b>"] + [escape(x) for x in lines if x])
 
     async def _assign_from_button(self, token: str) -> tuple[str, str]:
         """Run a button: returns (title, message) for the answer."""
@@ -576,7 +587,13 @@ class FilamentManager:
         data = str(event.data.get("data") or "")
         if not data.startswith("/bfm "):
             return
-        title, msg = await self._assign_from_button(data[5:].strip())
+        token = data[5:].strip()
+        if token == "here":
+            await self.hass.services.async_call("telegram_bot", "answer_callback_query", {
+                "callback_query_id": event.data.get("id"), "message": t(self.lang, "btn_here_answer"),
+            }, blocking=False)
+            return
+        title, msg = await self._assign_from_button(token)
         try:
             await self.hass.services.async_call("telegram_bot", "answer_callback_query", {
                 "callback_query_id": event.data.get("id"), "message": title[:180],
@@ -585,7 +602,7 @@ class FilamentManager:
             if message.get("message_id") and event.data.get("chat_id"):
                 await self.hass.services.async_call("telegram_bot", "edit_message", {
                     "message_id": message["message_id"], "chat_id": event.data["chat_id"],
-                    "title": title, "message": msg, "inline_keyboard": [],
+                    "message": self._tg_html(title, msg), "parse_mode": "html", "inline_keyboard": [],
                 }, blocking=False)
         except Exception as err:  # noqa: BLE001
             _LOGGER.debug("Telegram answer failed: %s", err)
