@@ -5,6 +5,7 @@ import asyncio
 from datetime import datetime
 import json
 import logging
+import os
 from pathlib import Path
 from typing import Any
 import uuid
@@ -28,6 +29,8 @@ from .const import (
     CONF_IGNORED_TAGS,
     CONF_LOW_THRESHOLD,
     CONF_BED_AUTO,
+    CONF_HUMIDITY,
+    CONF_SHOPPING_LIST,
     CONF_NOTIFY_BED,
     CONF_NOTIFY_INSUFFICIENT,
     CONF_NOTIFY_SCAN,
@@ -63,6 +66,7 @@ SPOOL_FIELDS = {
     "nozzle_min": int,
     "nozzle_max": int,
     "bed_temp": int,
+    "price": float,
     "spool_weight": float,
     "net_weight": float,
     "remaining": float,
@@ -110,6 +114,9 @@ class FilamentManager:
         self._scan_pages: dict[str, dict[str, Any]] = {}  # session -> {spool, choices, text}
         self._card_url: str | None = None
         self._bed_buttons: dict[str, tuple[str, int]] = {}  # token -> (printer device_id, temperature)
+        self._dry_buttons: dict[str, tuple[str, int, int]] = {}  # token -> (AMS device_id, °C, hours)
+        self._humid_since: dict[str, Any] = {}  # AMS device_id -> time above threshold / cancel handle
+        self._humid_warned: dict[str, Any] = {}  # AMS device_id -> last warning time
         self._unsubs: list[CALLBACK_TYPE] = []
         self._state_unsub: CALLBACK_TYPE | None = None
         self._started_unsub: CALLBACK_TYPE | None = None
@@ -134,6 +141,7 @@ class FilamentManager:
         self.jobs = data.get("jobs", {})
         self.pending = data.get("pending")
         self.unknown_tag = data.get("unknown_tag")
+        self.stats: dict[str, dict[str, Any]] = data.get("stats", {})  # "YYYY-MM" -> {grams, cost, materials}
         self.catalog = await self.hass.async_add_executor_job(self._load_catalog)
 
         self._unsubs.append(self.hass.bus.async_listen("tag_scanned", self._on_tag_scanned))
@@ -209,6 +217,7 @@ class FilamentManager:
                 if key in p.entities:
                     watch.append(p.entities[key])
             watch.extend(t.entity_id for t in p.trays)
+            watch.extend(u.entities["humidity"] for u in p.units if u.entities.get("humidity"))
         if self._state_unsub:
             self._state_unsub()
         self._state_unsub = (
@@ -340,6 +349,7 @@ class FilamentManager:
                     "jobs": self.jobs,
                     "pending": self.pending,
                     "unknown_tag": self.unknown_tag,
+                    "stats": self.stats,
                 }
             )
 
@@ -397,11 +407,8 @@ class FilamentManager:
                 await self.hass.services.async_call("notify", svc, {"title": title, "message": message}, blocking=True)
 
     async def async_notify(self, title: str, message: str) -> None:
-        for target in self.options.get(CONF_NOTIFY_TARGETS, []):
-            try:
-                await self._notify_one(target, title, message)
-            except Exception as err:  # noqa: BLE001 - a broken target must not stop the others
-                _LOGGER.warning("Notification via %s failed: %s", target, err)
+        # same formatting as the messages with buttons (bold title in Telegram, channel on phones)
+        await self.async_send_rich(self.options.get(CONF_NOTIFY_TARGETS, []), title, message.split("\n"), [])
 
     # ------------------------------------------------------------------ scan message with slot buttons
     def _phone_service(self, target: str) -> tuple[str | None, bool]:
@@ -580,6 +587,11 @@ class FilamentManager:
 
     async def _assign_from_button(self, token: str) -> tuple[str, str]:
         """Run a button: returns (title, message) for the answer."""
+        if token in self._dry_buttons:
+            try:
+                return await self._run_dry_button(token)
+            except Exception as err:  # noqa: BLE001
+                return "⚠️", str(err)
         if token in self._bed_buttons:
             try:
                 return await self._run_bed_button(token)
@@ -736,6 +748,7 @@ class FilamentManager:
         spool.update(fields)
         if data.get("gross_weight") not in (None, "", 0):
             spool["remaining"] = max(0.0, round(_num(data["gross_weight"]) - _num(spool.get("spool_weight")), 1))
+        self._check_restocked(spool)
         spool["updated"] = dt_util.utcnow().isoformat()
         if tag and tag == self.unknown_tag:
             self.unknown_tag = None
@@ -747,6 +760,7 @@ class FilamentManager:
     async def async_weigh(self, spool_id: str, gross: float) -> dict[str, Any]:
         spool = self._get_spool(spool_id)
         spool["remaining"] = max(0.0, round(_num(gross) - _num(spool.get("spool_weight")), 1))
+        self._check_restocked(spool)
         spool["updated"] = dt_util.utcnow().isoformat()
         await self._changed(spools_changed=True)
         return spool
@@ -907,6 +921,11 @@ class FilamentManager:
     @callback
     def _on_state(self, event: Event) -> None:
         entity_id = event.data["entity_id"]
+        for p in self.printers:
+            for u in p.units:
+                if u.entities.get("humidity") == entity_id:
+                    self._on_humidity(p, u)
+                    return
         printer = self._printer_for_entity(entity_id)
         if printer is None:
             return
@@ -1127,6 +1146,8 @@ class FilamentManager:
                 spool["last_used"] = dt_util.utcnow().isoformat()
                 consumed[key] = target
                 changed = True
+                if spool["remaining"] < float(self.options[CONF_LOW_THRESHOLD]) and not spool.get("on_list"):
+                    self.hass.async_create_task(self._shopping_add(spool))
         return changed
 
     async def _check_enough(self, printer: Printer, job: dict[str, Any]) -> None:
@@ -1183,17 +1204,190 @@ class FilamentManager:
                 continue
             is_low = rest is not None and rest < low
             any_low = any_low or is_low
+            cost = self._cost(spool, used)
+            self._add_stats(used, cost, (spool or {}).get("material") or str(self._tray_attrs(tray).get("type") or "?"))
             lines.append(t(self.lang, "used_line", tray=tray.label, name=name or "?", used=used,
-                           rest=round(rest or 0)) + (" " + t(self.lang, "low_mark") if is_low else ""))
+                           rest=round(rest or 0)) + (f" · ≈ {self._money(cost)}" if cost else "")
+                         + (" " + t(self.lang, "low_mark") if is_low else ""))
+            if is_low and spool is not None:
+                await self._shopping_add(spool)
             self.hass.bus.async_fire(EVENT_CONSUMED, {
                 "printer": printer.name, "tray": tray.label, "spool_id": spool["id"] if spool else None,
                 "name": name, "grams": used, "remaining": rest, "job": job_name,
             })
+        if lines:
+            self.stats.setdefault(dt_util.now().strftime("%Y-%m"),
+                                  {"grams": 0.0, "cost": 0.0, "materials": {}, "prints": 0})["prints"] += 1
         if lines and self.options[CONF_NOTIFY_SUMMARY]:
             title = t(self.lang, "used_title_low" if any_low else "used_title", job=job_name)
             if factor < 1:
                 title += " " + t(self.lang, "aborted")
             await self.async_notify(title, "\n".join(lines))
+
+    # ------------------------------------------------------------------ costs, statistics, shopping list
+    def _cost(self, spool: dict[str, Any] | None, grams: float) -> float:
+        if not spool or _num(spool.get("price")) <= 0 or _num(spool.get("net_weight")) <= 0:
+            return 0.0
+        return round(_num(spool["price"]) / _num(spool["net_weight"]) * grams, 2)
+
+    def _money(self, value: float) -> str:
+        cur = (self.hass.config.currency or "EUR").upper()
+        sym = {"EUR": "€", "USD": "$", "GBP": "£", "CHF": "CHF", "JPY": "¥"}.get(cur, cur)
+        txt = f"{value:.2f}"
+        if self.lang == "de":
+            txt = txt.replace(".", ",")
+        return f"{txt} {sym}" if sym in ("€", "CHF") or len(sym) > 1 else f"{sym}{txt}"
+
+    def _add_stats(self, grams: float, cost: float, material: str) -> None:
+        month = dt_util.now().strftime("%Y-%m")
+        st = self.stats.setdefault(month, {"grams": 0.0, "cost": 0.0, "materials": {}, "prints": 0})
+        st["grams"] = round(st["grams"] + grams, 1)
+        st["cost"] = round(st["cost"] + cost, 2)
+        st["materials"][material] = round(st["materials"].get(material, 0.0) + grams, 1)
+
+    def month_stats(self, month: str | None = None) -> dict[str, Any]:
+        month = month or dt_util.now().strftime("%Y-%m")
+        return self.stats.get(month, {"grams": 0.0, "cost": 0.0, "materials": {}, "prints": 0})
+
+    async def _shopping_add(self, spool: dict[str, Any]) -> None:
+        """Put an almost empty spool on the chosen to-do / shopping list (once)."""
+        todo = self.options.get(CONF_SHOPPING_LIST) or ""
+        if not todo or spool.get("on_list"):
+            return
+        summary = f"🧵 {spool['name']}"
+        try:
+            resp = await self.hass.services.async_call(
+                "todo", "get_items", {"entity_id": todo, "status": "needs_action"}, blocking=True, return_response=True)
+            items = (resp or {}).get(todo, {}).get("items", [])
+            if not any(str(i.get("summary") or "").startswith(summary) for i in items):
+                desc = " · ".join(x for x in (spool.get("vendor"), spool.get("material"),
+                                              t(self.lang, "shop_rest", rest=round(_num(spool.get("remaining"))))) if x)
+                st = self.hass.states.get(todo)
+                # TodoListEntityFeature.SET_DESCRIPTION_ON_ITEM = 64 (the HA shopping list has no descriptions)
+                if st is not None and int(st.attributes.get("supported_features", 0)) & 64:
+                    data = {"entity_id": todo, "item": summary, "description": desc}
+                else:
+                    data = {"entity_id": todo, "item": f"{summary} ({desc})" if desc else summary}
+                await self.hass.services.async_call("todo", "add_item", data, blocking=True)
+            spool["on_list"] = True
+        except Exception as err:  # noqa: BLE001
+            _LOGGER.warning("Could not add %s to %s: %s", spool.get("name"), todo, err)
+
+    def _check_restocked(self, spool: dict[str, Any]) -> None:
+        if spool.get("on_list") and _num(spool.get("remaining")) >= float(self.options[CONF_LOW_THRESHOLD]):
+            spool["on_list"] = False
+
+    # ------------------------------------------------------------------ AMS humidity
+    def _dry_suggestion(self, unit) -> tuple[int, int]:
+        """Safe drying values for what is loaded: lowest recommended temperature, longest time."""
+        temps, hours, pla = [], [], False
+        for tr in unit.trays:
+            a = self._tray_attrs(tr)
+            if not a or a.get("empty"):
+                continue
+            if str(a.get("type") or "").upper().startswith("PLA"):
+                pla = True
+            if _num(a.get("dry_temp")) > 0:
+                temps.append(int(_num(a["dry_temp"])))
+            if _num(a.get("dry_time")) > 0:
+                hours.append(int(_num(a["dry_time"])))
+        maximum = 85 if unit.model == "AMS HT" else 65
+        temp = min(temps) if temps else (45 if pla else 55)
+        return max(45, min(maximum, temp)), max(1, min(24, max(hours) if hours else 8))
+
+    @callback
+    def _on_humidity(self, printer: Printer, unit) -> None:
+        threshold = float(self.options.get(CONF_HUMIDITY) or 0)
+        value = _num(self.hass.states.get(unit.entities["humidity"]).state if self.hass.states.get(unit.entities["humidity"]) else None, -1)
+        key = unit.device_id
+        if threshold <= 0 or value < threshold:
+            handle = self._humid_since.pop(key, None)
+            if handle:
+                handle()
+            return
+        if key in self._humid_since:
+            return
+        from homeassistant.helpers.event import async_call_later  # noqa: PLC0415
+
+        async def later(_now) -> None:
+            self._humid_since.pop(key, None)
+            await self._warn_humidity(printer, unit)
+
+        # only warn if it stays humid for 10 minutes (opening the lid briefly is fine)
+        delay = float(os.environ.get("BFM_HUMIDITY_DELAY", "600"))  # env only for tests
+        self._humid_since[key] = async_call_later(self.hass, delay, later)
+
+    async def _warn_humidity(self, printer: Printer, unit) -> None:
+        st = self.hass.states.get(unit.entities.get("humidity", ""))
+        threshold = float(self.options.get(CONF_HUMIDITY) or 0)
+        value = _num(st.state if st else None, -1)
+        if threshold <= 0 or value < threshold:
+            return
+        if self.hass.states.get(unit.entities.get("drying", "")) and self.hass.states.get(unit.entities["drying"]).state == "on":
+            return
+        last = self._humid_warned.get(unit.device_id)
+        if last and (dt_util.utcnow() - last).total_seconds() < 12 * 3600:
+            return
+        self._humid_warned[unit.device_id] = dt_util.utcnow()
+        buttons = []
+        if unit.model in ("AMS 2 Pro", "AMS HT") and self.can_control(printer):
+            temp, hours = self._dry_suggestion(unit)
+            token = uuid.uuid4().hex[:10]
+            self._dry_buttons[token] = (unit.device_id, temp, hours)
+            buttons.append((t(self.lang, "humid_button", temp=temp, hours=hours), token))
+        await self.async_send_rich(
+            self.options.get(CONF_NOTIFY_TARGETS, []),
+            t(self.lang, "humid_title", unit=unit.name),
+            [t(self.lang, "humid_line", unit=unit.name, value=round(value), threshold=round(threshold))],
+            buttons,
+        )
+
+    async def _run_dry_button(self, token: str) -> tuple[str, str]:
+        device_id, temp, hours = self._dry_buttons.pop(token)
+        printer = next((p for p in self.printers if any(u.device_id == device_id for u in p.units)), None)
+        if printer is None:
+            return t(self.lang, "btn_expired_title"), t(self.lang, "btn_expired")
+        if not self.can_control(printer):
+            return "⚠️", t(self.lang, "err_no_control")
+        await self.hass.services.async_call(BAMBU_DOMAIN, "start_filament_drying", {
+            "device_id": device_id, "temp": temp, "duration": hours, "rotate_tray": False}, blocking=True)
+        return t(self.lang, "humid_done_title", temp=temp, hours=hours), t(self.lang, "humid_done")
+
+    # ------------------------------------------------------------------ export / import
+    def export_data(self) -> dict[str, Any]:
+        return {"format": "bambu_filament_manager", "version": 1, "exported": dt_util.utcnow().isoformat(),
+                "spools": [dict(s) for s in self.spools.values()]}
+
+    async def async_import(self, data: dict[str, Any] | list, replace: bool = False) -> dict[str, int]:
+        spools = data.get("spools", []) if isinstance(data, dict) else data
+        if not isinstance(spools, list):
+            raise ServiceValidationError("spools must be a list")
+        if replace:
+            self.spools = {}
+            self.assign = {}
+        added = updated = 0
+        for raw in spools:
+            if not isinstance(raw, dict) or not str(raw.get("name") or "").strip():
+                continue
+            fields = self._clean_fields(raw)
+            existing = self.spools.get(str(raw.get("id") or "")) or next(
+                (s for s in self.spools.values() if fields.get("tag") and s.get("tag") == fields.get("tag")), None)
+            if existing is not None:
+                existing.update(fields)
+                updated += 1
+                continue
+            spool = {"id": str(raw.get("id") or uuid.uuid4().hex[:12]), "name": "", "vendor": "", "material": "",
+                     "filament_id": "", "color": "808080FF", "nozzle_min": 190, "nozzle_max": 230,
+                     "spool_weight": float(self.options[CONF_DEFAULT_SPOOL_WEIGHT]),
+                     "net_weight": float(self.options[CONF_DEFAULT_NET_WEIGHT]), "remaining": 0.0, "tag": "", "note": "",
+                     "bambu_uuid": str(raw.get("bambu_uuid") or ""), "created": raw.get("created") or dt_util.utcnow().isoformat()}
+            spool.update(fields)
+            if spool["id"] in self.spools:
+                spool["id"] = uuid.uuid4().hex[:12]
+            self.spools[spool["id"]] = spool
+            added += 1
+        await self._changed(spools_changed=True)
+        return {"added": added, "updated": updated}
 
     # ------------------------------------------------------------------ export for card
     def as_dict(self) -> dict[str, Any]:
@@ -1222,6 +1416,8 @@ class FilamentManager:
             "low_threshold": self.options[CONF_LOW_THRESHOLD],
             "default_spool_weight": self.options[CONF_DEFAULT_SPOOL_WEIGHT],
             "default_net_weight": self.options[CONF_DEFAULT_NET_WEIGHT],
+            "month": self.month_stats(),
+            "currency": self._money(0).replace("0,00", "").replace("0.00", "").strip(),
         }
 
     def catalog_list(self) -> list[dict[str, Any]]:

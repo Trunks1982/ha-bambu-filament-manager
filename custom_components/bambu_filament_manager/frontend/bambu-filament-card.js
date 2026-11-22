@@ -2,7 +2,7 @@
  * Shows printer status and the AMS like in Bambu Studio / Handy, and manages spools.
  * No build step, no external dependencies. */
 const DOMAIN = "bambu_filament_manager";
-const CARD_VERSION = "0.6.1";
+const CARD_VERSION = "0.7.0";
 
 const I18N = {
   en: {
@@ -17,7 +17,7 @@ const I18N = {
     new_for_slot: "New spool for this slot", stale: "The slot shows different filament than the linked spool – choose the spool again.",
     on_printer: "Set on printer", name: "Name", vendor: "Vendor", profile: "Filament profile", custom_id: "Other filament ID…",
     material: "Material", filament_id: "Filament ID", color: "Color", nozzle: "Nozzle °C", spool_weight: "Empty spool (g)",
-    net_weight: "Filament when new (g)", bed: "Bed °C", bed_auto: "auto", bed_hint: "empty = from the profile for this printer and plate", bed_short: "Bed", sw_hint: "(remembered per vendor)", remaining: "Remaining (g)", scale: "Or weigh: scale shows (g)", tag: "NFC sticker",
+    net_weight: "Filament when new (g)", price: "Price of the spool", this_month: "This month", prints: "prints", export: "Export", import: "Import", imported: "Imported", added: "new", updated: "updated", import_err: "Not a valid export file", bed: "Bed °C", bed_auto: "auto", bed_hint: "empty = from the profile for this printer and plate", bed_short: "Bed", sw_hint: "(remembered per vendor)", remaining: "Remaining (g)", scale: "Or weigh: scale shows (g)", tag: "NFC sticker",
     take_tag: "Use last scanned sticker", save: "Save", delete: "Delete", delete_q: "Really delete this spool?", delete_tag: "Also delete the NFC sticker in Home Assistant",
     edit: "Edit spool", select: "Select (like NFC scan)", in_slot: "in", none: "No spools yet – create your first one.",
     needs: "needs", job: "Print job", linked_only: "linked (set color/profile on the printer)",
@@ -41,7 +41,7 @@ const I18N = {
     new_for_slot: "Neue Rolle für diesen Slot", stale: "Im Slot steht anderes Filament als in der verknüpften Rolle – Rolle bitte neu wählen.",
     on_printer: "Am Drucker eingestellt", name: "Name", vendor: "Hersteller", profile: "Filament-Profil", custom_id: "Andere Filament-ID…",
     material: "Material", filament_id: "Filament-ID", color: "Farbe", nozzle: "Düse °C", spool_weight: "Leere Spule (g)",
-    net_weight: "Filament neu (g)", bed: "Bett °C", bed_auto: "auto", bed_hint: "leer = aus dem Profil für diesen Drucker und die Platte", bed_short: "Bett", sw_hint: "(merkt sich je Hersteller)", remaining: "Rest (g)", scale: "Oder wiegen: Waage zeigt (g)", tag: "NFC-Aufkleber",
+    net_weight: "Filament neu (g)", price: "Preis der Rolle", this_month: "Diesen Monat", prints: "Drucke", export: "Exportieren", import: "Importieren", imported: "Importiert", added: "neu", updated: "aktualisiert", import_err: "Keine gültige Export-Datei", bed: "Bett °C", bed_auto: "auto", bed_hint: "leer = aus dem Profil für diesen Drucker und die Platte", bed_short: "Bett", sw_hint: "(merkt sich je Hersteller)", remaining: "Rest (g)", scale: "Oder wiegen: Waage zeigt (g)", tag: "NFC-Aufkleber",
     take_tag: "Zuletzt gescannten Aufkleber nehmen", save: "Speichern", delete: "Löschen", delete_q: "Rolle wirklich löschen?", delete_tag: "NFC-Aufkleber auch in Home Assistant löschen",
     edit: "Rolle bearbeiten", select: "Auswählen (wie NFC-Scan)", in_slot: "in", none: "Noch keine Rollen – lege deine erste an.",
     needs: "braucht", job: "Druckauftrag", linked_only: "verknüpft (Farbe/Profil am Drucker einstellen)",
@@ -327,6 +327,36 @@ class BambuFilamentCard extends HTMLElement {
     }).join("")}</div>`;
   }
 
+  _monthHtml() {
+    const m = this._data.month || {}, t = this._t;
+    if (!num(m.grams)) return "";
+    const lang = this._hass.locale?.language || "de";
+    const cost = num(m.cost) ? ` · ${num(m.cost).toLocaleString(lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${esc(this._data.currency || "")}` : "";
+    return `<div class="month"><ha-icon icon="mdi:chart-bar"></ha-icon>${esc(t.this_month)}: <b>${Math.round(num(m.grams))} g</b>${cost}${m.prints ? ` · ${m.prints} ${esc(t.prints)}` : ""}</div>`;
+  }
+
+  async _export() {
+    try {
+      const r = await this._hass.callWS({ type: "call_service", domain: DOMAIN, service: "export_spools", service_data: {}, return_response: true });
+      const blob = new Blob([JSON.stringify(r.response, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `filament-rollen-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    } catch (e) { this._toast(e?.message || String(e)); }
+  }
+
+  async _import(file) {
+    const t = this._t;
+    try {
+      const data = JSON.parse(await file.text());
+      if (!Array.isArray(data) && !Array.isArray(data?.spools)) throw new Error(t.import_err);
+      const r = await this._hass.callWS({ type: "call_service", domain: DOMAIN, service: "import_spools", service_data: { data }, return_response: true });
+      this._toast(`${t.imported}: ${r.response?.added ?? 0} ${t.added}, ${r.response?.updated ?? 0} ${t.updated}`);
+    } catch (e) { this._toast(e instanceof SyntaxError ? t.import_err : (e?.message || String(e))); }
+  }
+
   _listHtml() {
     const t = this._t;
     const spools = [...(this._data.spools || [])];
@@ -341,9 +371,14 @@ class BambuFilamentCard extends HTMLElement {
       <button class="btn flat tog" data-a="toggle-list"><ha-icon icon="mdi:${this._showList ? "chevron-up" : "chevron-down"}"></ha-icon>${esc(t.spools)} (${spools.length})</button>
       <button class="btn" data-a="new"><ha-icon icon="mdi:plus"></ha-icon>${esc(t.new_spool)}</button>
     </div>
+    ${this._monthHtml()}
     ${this._showList ? `<div class="listopts">
         <select data-a="sort">${["name", "rest", "color"].map((k) => `<option value="${k}" ${this._sort === k ? "selected" : ""}>${esc(t.sort)}: ${esc(t["by_" + k])}</option>`).join("")}</select>
         <label><input type="checkbox" data-a="hide-empty" ${hideEmpty ? "checked" : ""}> ${esc(t.hide_empty)}</label>
+        <span class="grow"></span>
+        <button class="btn flat sm" data-a="export"><ha-icon icon="mdi:download"></ha-icon>${esc(t.export)}</button>
+        <button class="btn flat sm" data-a="import"><ha-icon icon="mdi:upload"></ha-icon>${esc(t.import)}</button>
+        <input type="file" accept="application/json,.json" data-a="import-file" hidden>
       </div>
       <div class="list">${list.length ? list.map((s) => {
         const pct = s.net_weight ? Math.max(0, Math.min(100, (num(s.remaining) / num(s.net_weight, 1000)) * 100)) : 0;
@@ -439,6 +474,7 @@ class BambuFilamentCard extends HTMLElement {
           <label>${esc(t.spool_weight)}${this._dialog.id ? "" : ` <small class="hint">${esc(t.sw_hint)}</small>`}<input class="inp" type="number" inputmode="decimal" data-f="spool_weight" value="${esc(f.spool_weight)}"></label>
           <label>${esc(t.net_weight)}<input class="inp" type="number" inputmode="decimal" data-f="net_weight" value="${esc(f.net_weight)}"></label>
         </div>
+        <label>${esc(t.price)}${this._data.currency ? ` (${esc(this._data.currency)})` : ""}<input class="inp" type="number" inputmode="decimal" step="0.01" data-f="price" value="${num(f.price) > 0 ? esc(f.price) : ""}" placeholder="—"></label>
         <div class="two">
           <label>${esc(t.remaining)}<input class="inp" type="number" inputmode="decimal" data-f="remaining" value="${esc(scaleRest !== null ? Math.round(scaleRest) : f.remaining)}" ${scaleRest !== null ? "disabled" : ""}></label>
           <label>${esc(t.scale)}<input class="inp" type="number" inputmode="decimal" data-f="gross" value="${esc(f.gross || "")}" placeholder="—"></label>
@@ -616,6 +652,7 @@ class BambuFilamentCard extends HTMLElement {
       return;
     }
     if (el.dataset.a === "sort") { this._sort = el.value; this._render(); return; }
+    if (el.dataset.a === "import-file") { const f = el.files?.[0]; if (f) this._import(f); el.value = ""; return; }
     if (el.dataset.a === "hide-empty") { this._hideEmpty = el.checked; this._render(); return; }
     if (el.dataset.f === "profile" && this._dialog?.type === "edit") {
       const f = this._readForm();
@@ -638,6 +675,8 @@ class BambuFilamentCard extends HTMLElement {
     if (a === "overlay" && e.target !== el) return;
     switch (a) {
       case "overlay": case "close": this._dialog = null; this._renderDialog(); break;
+      case "export": this._export(); break;
+      case "import": this.shadowRoot.querySelector('[data-a="import-file"]')?.click(); break;
       case "toggle-list": this._showList = !this._showList; this._render(); break;
       case "new": this._openEdit(null); break;
       case "new-from-tag": this._openEdit(null, { tag: this._data.unknown_tag }); break;
@@ -717,6 +756,7 @@ class BambuFilamentCard extends HTMLElement {
         };
         ["nozzle_min", "nozzle_max", "spool_weight", "net_weight"].forEach((k) => { if (f[k] !== "" && f[k] !== undefined && f[k] !== null) data[k] = num(f[k]); });
         data.bed_temp = num(f.bed_temp) > 0 ? num(f.bed_temp) : 0;
+        data.price = num(f.price) > 0 ? num(f.price) : 0;
         if (num(f.gross) > 0) data.gross_weight = num(f.gross);
         else if (f.remaining !== "" && f.remaining !== undefined) data.remaining = num(f.remaining);
         if (f.bambu_uuid) { delete data.filament_id; }
@@ -807,7 +847,7 @@ input[type=color]{width:34px;height:30px;border:none;background:none;padding:0;c
 .dact{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:center}
 .confirm{margin-top:12px;padding:10px;border-radius:10px;background:rgba(224,64,64,.12)}
 .chk{display:flex!important;gap:6px;align-items:center;color:var(--bfc-text)!important}
-.hint{font-size:.85em;opacity:.8}.range{width:100%;margin-top:6px;accent-color:#e07020}.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.chipbtn{padding:4px 10px;border-radius:14px;background:var(--bfc-panel);cursor:pointer;font-size:.85em;border:1px solid var(--divider-color,#555)}.chipbtn.on{background:#e07020;color:#fff;border-color:#e07020}.btn:disabled{opacity:.5;cursor:not-allowed}.dryrow{display:flex;align-items:center;gap:6px;margin:-2px 0 8px;padding:6px 8px;border-radius:10px;background:rgba(224,112,32,.14);color:#e07020;font-size:.85em;font-weight:600}.dryrow span{flex:1}.spin{animation:bfcspin 2s linear infinite}@keyframes bfcspin{to{transform:rotate(360deg)}}.err{color:#e04040;font-size:.85em;margin-top:8px;min-height:1em}
+.hint{font-size:.85em;opacity:.8}.range{width:100%;margin-top:6px;accent-color:#e07020}.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.chipbtn{padding:4px 10px;border-radius:14px;background:var(--bfc-panel);cursor:pointer;font-size:.85em;border:1px solid var(--divider-color,#555)}.chipbtn.on{background:#e07020;color:#fff;border-color:#e07020}.btn:disabled{opacity:.5;cursor:not-allowed}.dryrow{display:flex;align-items:center;gap:6px;margin:-2px 0 8px;padding:6px 8px;border-radius:10px;background:rgba(224,112,32,.14);color:#e07020;font-size:.85em;font-weight:600}.dryrow span{flex:1}.spin{animation:bfcspin 2s linear infinite}@keyframes bfcspin{to{transform:rotate(360deg)}}.grow{flex:1}.month{display:flex;align-items:center;gap:6px;font-size:.85em;color:var(--bfc-sub);margin-top:8px}.err{color:#e04040;font-size:.85em;margin-top:8px;min-height:1em}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);background:#323232;color:#fff;padding:10px 16px;border-radius:10px;z-index:10000;opacity:0;transition:all .25s;pointer-events:none;max-width:90vw}
 #toast.show{transform:translateX(-50%);opacity:1}
 `;

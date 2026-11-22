@@ -15,6 +15,8 @@ from .const import (
     CONF_IGNORED_TAGS,
     CONF_LOW_THRESHOLD,
     CONF_BED_AUTO,
+    CONF_HUMIDITY,
+    CONF_SHOPPING_LIST,
     CONF_NOTIFY_BED,
     CONF_NOTIFY_INSUFFICIENT,
     CONF_NOTIFY_SCAN,
@@ -223,6 +225,7 @@ class FilamentManagerOptionsFlow(CloudSteps, OptionsFlow):
 
     async def async_step_settings(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         if user_input is not None:
+            user_input.setdefault(CONF_SHOPPING_LIST, "")
             return self.async_create_entry(data=user_input)
 
         opts = {**DEFAULTS, **self.config_entry.options}
@@ -271,6 +274,11 @@ class FilamentManagerOptionsFlow(CloudSteps, OptionsFlow):
                 vol.Optional(CONF_BED_AUTO, default=opts[CONF_BED_AUTO]): bool,
                 vol.Optional(CONF_NOTIFY_SUMMARY, default=opts[CONF_NOTIFY_SUMMARY]): bool,
                 vol.Optional(CONF_LOW_THRESHOLD, default=opts[CONF_LOW_THRESHOLD]): grams(1000),
+                vol.Optional(CONF_SHOPPING_LIST, description={"suggested_value": opts[CONF_SHOPPING_LIST] or None}):
+                    selector.EntitySelector(selector.EntitySelectorConfig(domain="todo")),
+                vol.Optional(CONF_HUMIDITY, default=opts[CONF_HUMIDITY]): selector.NumberSelector(
+                    selector.NumberSelectorConfig(min=0, max=100, step=1, unit_of_measurement="%",
+                                                  mode=selector.NumberSelectorMode.BOX)),
                 vol.Optional(CONF_DEFAULT_SPOOL_WEIGHT, default=opts[CONF_DEFAULT_SPOOL_WEIGHT]): grams(1000),
                 vol.Optional(CONF_DEFAULT_NET_WEIGHT, default=opts[CONF_DEFAULT_NET_WEIGHT]): grams(5000),
                 vol.Optional(CONF_TRACK_BAMBU_SPOOLS, default=opts[CONF_TRACK_BAMBU_SPOOLS]): bool,

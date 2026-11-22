@@ -114,14 +114,18 @@
           "ignored_tags": "NFC-Aufkleber ignorieren",
           "scan_targets": "Scan-Meldung mit Slot-Knöpfen senden an",
           "notify_bed": "Warnung wenn das Bett zu kalt eingestellt ist",
-          "bed_auto_raise": "Bett beim Druckstart automatisch anheben"
+          "bed_auto_raise": "Bett beim Druckstart automatisch anheben",
+          "shopping_list": "Fast leere Rollen auf diese Liste setzen",
+          "humidity_threshold": "Feuchte-Warnung fürs AMS ab"
         },
         "data_description": {
           "ignored_tags": "Aufkleber, die du in HA selbst benannt hast, werden sowieso ignoriert. Automatisch benannte („Tag …“) hier eintragen, wenn sie zu etwas anderem gehören (z. B. Tür).",
           "default_spool_weight": "Zum Ausrechnen des Rests beim Wiegen (Waage zeigt Rolle + Spule).",
           "scan_targets": "Leer = an dieselben Ziele wie oben. Handy (HA-App) und Telegram bekommen Knöpfe für die Slots, alle anderen nur Text.",
           "notify_bed": "Beim Druckstart: Bett-Solltemperatur kleiner als die Rolle braucht (eigener Wert der Rolle, sonst Bambu-Studio-Profil für Drucker und Platte). Mit Knopf zum Anheben.",
-          "bed_auto_raise": "Ist das Bett kälter eingestellt als die Rolle braucht (z. B. eigene 110 °C für ASA), setzt der Filament Manager es selbst hoch und meldet das nur. Nur im LAN-Entwicklermodus."
+          "bed_auto_raise": "Ist das Bett kälter eingestellt als die Rolle braucht (z. B. eigene 110 °C für ASA), setzt der Filament Manager es selbst hoch und meldet das nur. Nur im LAN-Entwicklermodus.",
+          "shopping_list": "Z. B. deine Einkaufsliste. Leer = aus. Eine Rolle kommt einmal drauf, wenn sie unter „Fast leer“ fällt.",
+          "humidity_threshold": "Bleibt die Feuchte 10 Minuten darüber, kommt eine Meldung mit Knopf „Jetzt trocknen“ (AMS 2 Pro / HT). 0 = aus. Höchstens alle 12 Stunden."
         }
       },
       "printer": {
@@ -190,6 +194,12 @@
     "sensor": {
       "pending": {
         "name": "Gescannte Rolle"
+      },
+      "month_usage": {
+        "name": "Filament diesen Monat"
+      },
+      "month_cost": {
+        "name": "Filamentkosten diesen Monat"
       }
     }
   },
@@ -242,6 +252,9 @@
         },
         "bed_temp": {
           "name": "Bett °C (0 = aus dem Profil)"
+        },
+        "price": {
+          "name": "Preis der Rolle"
         }
       }
     },
@@ -293,6 +306,9 @@
         },
         "bed_temp": {
           "name": "Bett °C (0 = aus dem Profil)"
+        },
+        "price": {
+          "name": "Preis der Rolle"
         }
       }
     },
@@ -373,6 +389,22 @@
     "list_spools": {
       "name": "Rollen auflisten",
       "description": "Liefert alle Rollen mit Slot."
+    },
+    "export_spools": {
+      "name": "Rollen exportieren",
+      "description": "Liefert alle Rollen als Daten (zum Sichern)."
+    },
+    "import_spools": {
+      "name": "Rollen importieren",
+      "description": "Übernimmt Rollen aus einem Export.",
+      "fields": {
+        "data": {
+          "name": "Daten"
+        },
+        "replace": {
+          "name": "Vorhandene Rollen ersetzen"
+        }
+      }
     }
   },
   "selector": {

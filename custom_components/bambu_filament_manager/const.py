@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 DOMAIN = "bambu_filament_manager"
-VERSION = "0.6.1"
+VERSION = "0.7.0"
 BAMBU_DOMAIN = "bambu_lab"
 
 STORAGE_KEY = DOMAIN
@@ -24,6 +24,8 @@ CONF_NOTIFY_UNKNOWN_TAG = "notify_unknown_tag"
 CONF_NOTIFY_INSUFFICIENT = "notify_insufficient"
 CONF_NOTIFY_BED = "notify_bed"
 CONF_BED_AUTO = "bed_auto_raise"
+CONF_HUMIDITY = "humidity_threshold"
+CONF_SHOPPING_LIST = "shopping_list"
 CONF_NOTIFY_SUMMARY = "notify_summary"
 CONF_LOW_THRESHOLD = "low_threshold"
 CONF_DEFAULT_SPOOL_WEIGHT = "default_spool_weight"
@@ -39,6 +41,8 @@ DEFAULTS = {
     CONF_NOTIFY_INSUFFICIENT: True,
     CONF_NOTIFY_BED: True,
     CONF_BED_AUTO: False,
+    CONF_HUMIDITY: 50,
+    CONF_SHOPPING_LIST: "",
     CONF_NOTIFY_SUMMARY: True,
     CONF_LOW_THRESHOLD: 100,
     CONF_DEFAULT_SPOOL_WEIGHT: 240,

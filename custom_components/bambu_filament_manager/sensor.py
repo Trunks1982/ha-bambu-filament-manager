@@ -32,7 +32,8 @@ async def async_setup_entry(
     spool_entities: dict[str, SpoolSensor] = {}
     tray_entities: dict[str, TraySensor] = {}
 
-    async_add_entities([PendingSensor(manager, entry.entry_id)])
+    async_add_entities([PendingSensor(manager, entry.entry_id), MonthUsageSensor(manager, entry.entry_id),
+                        MonthCostSensor(manager, entry.entry_id)])
 
     @callback
     def sync() -> None:
@@ -133,6 +134,7 @@ class SpoolSensor(_Base):
             "nozzle_min": sp.get("nozzle_min"),
             "nozzle_max": sp.get("nozzle_max"),
             "bed_temp": sp.get("bed_temp") or None,
+            "price": sp.get("price") or None,
             "spool_weight": sp.get("spool_weight"),
             "net_weight": net,
             "percent": round((sp.get("remaining") or 0) / net * 100) if net else None,
@@ -200,6 +202,55 @@ class TraySensor(_Base):
             "source": source,
             "remaining": round(rest) if rest is not None else None,
         }
+
+
+class MonthUsageSensor(_Base):
+    """Filament used this month."""
+
+    _attr_icon = "mdi:chart-bar"
+    _attr_translation_key = "month_usage"
+    _attr_device_class = SensorDeviceClass.WEIGHT
+    _attr_native_unit_of_measurement = UnitOfMass.GRAMS
+    _attr_suggested_display_precision = 0
+
+    def __init__(self, manager: FilamentManager, entry_id: str) -> None:
+        super().__init__(manager, entry_id)
+        self._attr_unique_id = f"{entry_id}_month_usage"
+
+    @property
+    def native_value(self) -> float:
+        return self.manager.month_stats()["grams"]
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        st = self.manager.month_stats()
+        return {"prints": st.get("prints", 0), "materials": st.get("materials", {}),
+                "history": {m: v.get("grams") for m, v in sorted(self.manager.stats.items())[-12:]}}
+
+
+class MonthCostSensor(_Base):
+    """Filament cost this month (spools with a price)."""
+
+    _attr_icon = "mdi:cash"
+    _attr_translation_key = "month_cost"
+    _attr_device_class = SensorDeviceClass.MONETARY
+    _attr_suggested_display_precision = 2
+
+    def __init__(self, manager: FilamentManager, entry_id: str) -> None:
+        super().__init__(manager, entry_id)
+        self._attr_unique_id = f"{entry_id}_month_cost"
+
+    @property
+    def native_unit_of_measurement(self) -> str:
+        return self.manager.hass.config.currency or "EUR"
+
+    @property
+    def native_value(self) -> float:
+        return self.manager.month_stats()["cost"]
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        return {"history": {m: v.get("cost") for m, v in sorted(self.manager.stats.items())[-12:]}}
 
 
 class PendingSensor(_Base):

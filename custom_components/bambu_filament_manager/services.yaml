@@ -8,6 +8,7 @@ add_spool:
     nozzle_min: {selector: {number: {min: 150, max: 350, unit_of_measurement: "°C"}}}
     nozzle_max: {selector: {number: {min: 150, max: 350, unit_of_measurement: "°C"}}}
     bed_temp: {selector: {number: {min: 0, max: 130, unit_of_measurement: "°C", mode: box}}}
+    price: {selector: {number: {min: 0, max: 1000, step: 0.01, mode: box}}}
     spool_weight: {selector: {number: {min: 0, max: 1000, unit_of_measurement: g, mode: box}}}
     net_weight: {selector: {number: {min: 0, max: 5000, unit_of_measurement: g, mode: box}}}
     remaining: {selector: {number: {min: 0, max: 5000, unit_of_measurement: g, mode: box}}}
@@ -26,6 +27,7 @@ update_spool:
     nozzle_min: {selector: {number: {min: 150, max: 350, unit_of_measurement: "°C"}}}
     nozzle_max: {selector: {number: {min: 150, max: 350, unit_of_measurement: "°C"}}}
     bed_temp: {selector: {number: {min: 0, max: 130, unit_of_measurement: "°C", mode: box}}}
+    price: {selector: {number: {min: 0, max: 1000, step: 0.01, mode: box}}}
     spool_weight: {selector: {number: {min: 0, max: 1000, unit_of_measurement: g, mode: box}}}
     net_weight: {selector: {number: {min: 0, max: 5000, unit_of_measurement: g, mode: box}}}
     remaining: {selector: {number: {min: 0, max: 5000, unit_of_measurement: g, mode: box}}}
@@ -57,3 +59,8 @@ select_spool:
     spool_id: {selector: {text: {}}}
 clear_unknown_tag:
 list_spools:
+export_spools:
+import_spools:
+  fields:
+    data: {required: true, selector: {object: {}}}
+    replace: {default: false, selector: {boolean: {}}}

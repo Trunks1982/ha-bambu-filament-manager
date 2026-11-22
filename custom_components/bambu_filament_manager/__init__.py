@@ -36,6 +36,7 @@ SPOOL_SCHEMA = {
     vol.Optional("nozzle_min"): vol.Coerce(int),
     vol.Optional("nozzle_max"): vol.Coerce(int),
     vol.Optional("bed_temp"): vol.Coerce(int),
+    vol.Optional("price"): vol.Coerce(float),
     vol.Optional("spool_weight"): vol.Coerce(float),
     vol.Optional("net_weight"): vol.Coerce(float),
     vol.Optional("remaining"): vol.Coerce(float),
@@ -139,6 +140,19 @@ def _register_services(hass: HomeAssistant) -> None:
         for sp in m.spools.values():
             spools.append({**sp, "location": m.spool_location(sp["id"])})
         return {"spools": spools}
+
+    async def export_spools(call: ServiceCall) -> ServiceResponse:
+        return _manager(hass).export_data()
+
+    async def import_spools(call: ServiceCall) -> ServiceResponse:
+        return await _manager(hass).async_import(call.data["data"], call.data.get("replace", False))
+
+    hass.services.async_register(DOMAIN, "export_spools", export_spools, vol.Schema({}),
+                                 supports_response=SupportsResponse.ONLY)
+    hass.services.async_register(DOMAIN, "import_spools", import_spools,
+                                 vol.Schema({vol.Required("data"): vol.Any(dict, list),
+                                             vol.Optional("replace", default=False): cv.boolean}),
+                                 supports_response=SupportsResponse.OPTIONAL)
 
     tray = vol.Required("tray")
     spool_id = vol.Required("spool_id")

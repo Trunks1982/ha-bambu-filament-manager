@@ -114,14 +114,18 @@
           "ignored_tags": "Ignore NFC stickers",
           "scan_targets": "Send the scan message with slot buttons to",
           "notify_bed": "Warn when the bed is set too cold",
-          "bed_auto_raise": "Raise the bed automatically at print start"
+          "bed_auto_raise": "Raise the bed automatically at print start",
+          "shopping_list": "Put almost empty spools on this list",
+          "humidity_threshold": "AMS humidity warning from"
         },
         "data_description": {
           "ignored_tags": "Stickers you named yourself in HA are ignored anyway. Add automatically named ones (“Tag …”) here if they belong to something else (e.g. a door).",
           "default_spool_weight": "Used to compute the rest when weighing (scale shows filament + spool).",
           "scan_targets": "Empty = same targets as above. Phones (HA app) and Telegram get buttons for the slots, everything else text only.",
           "notify_bed": "At print start: bed target lower than the spool needs (the spool's own value, otherwise the Bambu Studio profile for printer and plate). With a button to raise it.",
-          "bed_auto_raise": "If the bed is set colder than the spool needs (e.g. your own 110 °C for ASA), the Filament Manager raises it itself and only reports it. LAN developer mode only."
+          "bed_auto_raise": "If the bed is set colder than the spool needs (e.g. your own 110 °C for ASA), the Filament Manager raises it itself and only reports it. LAN developer mode only.",
+          "shopping_list": "E.g. your shopping list. Empty = off. A spool is added once when it drops below “almost empty”.",
+          "humidity_threshold": "If humidity stays above for 10 minutes you get a message with a “dry now” button (AMS 2 Pro / HT). 0 = off. At most every 12 hours."
         }
       },
       "printer": {
@@ -190,6 +194,12 @@
     "sensor": {
       "pending": {
         "name": "Scanned spool"
+      },
+      "month_usage": {
+        "name": "Filament this month"
+      },
+      "month_cost": {
+        "name": "Filament cost this month"
       }
     }
   },
@@ -242,6 +252,9 @@
         },
         "bed_temp": {
           "name": "Bed °C (0 = from the profile)"
+        },
+        "price": {
+          "name": "Price of the spool"
         }
       }
     },
@@ -293,6 +306,9 @@
         },
         "bed_temp": {
           "name": "Bed °C (0 = from the profile)"
+        },
+        "price": {
+          "name": "Price of the spool"
         }
       }
     },
@@ -373,6 +389,22 @@
     "list_spools": {
       "name": "List spools",
       "description": "Returns all spools with their slot."
+    },
+    "export_spools": {
+      "name": "Export spools",
+      "description": "Returns all spools as data (for backups)."
+    },
+    "import_spools": {
+      "name": "Import spools",
+      "description": "Imports spools from an export.",
+      "fields": {
+        "data": {
+          "name": "Data"
+        },
+        "replace": {
+          "name": "Replace existing spools"
+        }
+      }
     }
   },
   "selector": {
