@@ -2,7 +2,7 @@
  * Shows printer status and the AMS like in Bambu Studio / Handy, and manages spools.
  * No build step, no external dependencies. */
 const DOMAIN = "bambu_filament_manager";
-const CARD_VERSION = "0.6.0";
+const CARD_VERSION = "0.6.1";
 
 const I18N = {
   en: {
@@ -519,7 +519,8 @@ class BambuFilamentCard extends HTMLElement {
   _autoBed(fid) {
     const p = this._printer, c = (this._catalog || []).find((x) => x.id === fid);
     const bed = c?.bed; if (!bed || !p) return null;
-    return ((bed[p.model_key] || bed.default || {})[p.plate]) || null;
+    const fb = { P1S: "P1P", X1: "X1C", X1E: "X1C" }[p.model_key];
+    return ((bed[p.model_key] || (fb && bed[fb]) || bed.default || {})[p.plate]) || null;
   }
 
   _spoolBed(s) {

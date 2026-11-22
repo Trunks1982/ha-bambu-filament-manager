@@ -231,7 +231,10 @@ class FilamentManager:
         return None
 
     # ------------------------------------------------------------------ bed temperature
-    MODEL_ALIASES = {"A1MINI": "A1M", "P1S": "P1P", "X1": "X1C", "X1CARBON": "X1C", "X1E": "X1C", "H2DPRO": "H2DP"}
+    # device model -> model name used in the Bambu Studio profiles ("@BBL A1M" ...)
+    MODEL_ALIASES = {"A1MINI": "A1M", "X1CARBON": "X1C", "H2DPRO": "H2DP"}
+    # used only if the profiles have no own values for the model
+    MODEL_FALLBACK = {"P1S": "P1P", "X1": "X1C", "X1E": "X1C"}
 
     def _model_key(self, printer: Printer) -> str:
         m = (printer.model or "").upper().replace(" ", "").replace("-", "")
@@ -243,7 +246,7 @@ class FilamentManager:
 
     def catalog_bed(self, filament_id: str, model: str, plate: str) -> int | None:
         bed = (self.catalog.get(filament_id or "") or {}).get("bed_temperature") or {}
-        table = bed.get(model) or bed.get("default") or {}
+        table = bed.get(model) or bed.get(self.MODEL_FALLBACK.get(model, "")) or bed.get("default") or {}
         return table.get(plate)
 
     def bed_for(self, printer: Printer, spool: dict[str, Any] | None, filament_id: str = "") -> tuple[int | None, str]:
