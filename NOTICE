@@ -1,0 +1,11 @@
+Third-party data
+
+custom_components/bambu_filament_manager/catalog.json
+  Filament names, IDs and nozzle temperatures from ha-bambulab
+  (https://github.com/greghesp/ha-bambulab), MIT License,
+  Copyright (c) 2023 ha-bambulab contributors.
+  Bed temperatures per printer model and build plate generated with
+  tools/build_bed_temps.py from the Bambu Studio filament profiles
+  (https://github.com/bambulab/BambuStudio).
+
+Printer and AMS pictures are served by ha-bambulab at runtime and are not part of this repository.

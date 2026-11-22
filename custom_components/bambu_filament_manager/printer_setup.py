@@ -108,7 +108,8 @@ CLOUD_ERRORS = {
     "cannot_connect_cloud_connection_refused", "cannot_connect_cloud_address_unreachable",
     "cannot_connect_cloud_unknown",
 }
-REGIONS = ["Europe", "NorthAmerica", "AsiaPacific", "China", "Other"]
+# our selector values (lowercase, as HA translation keys require) -> values ha-bambulab expects
+REGIONS = {"europe": "Europe", "northamerica": "NorthAmerica", "asiapacific": "AsiaPacific", "china": "China", "other": "Other"}
 
 
 def _schema_keys(schema: vol.Schema | None) -> list[str]:
@@ -154,7 +155,7 @@ class CloudSession:
     async def login(self, region: str, email: str, password: str) -> dict[str, Any]:
         self.abort()
         manager = self.hass.config_entries.flow
-        self._login = {"region": region, "email": email.strip(), "password": password}
+        self._login = {"region": REGIONS.get(region, region), "email": email.strip(), "password": password}
         try:
             result = await manager.async_init(BAMBU_DOMAIN, context={"source": SOURCE_USER})
             self.flow_id = result.get("flow_id")

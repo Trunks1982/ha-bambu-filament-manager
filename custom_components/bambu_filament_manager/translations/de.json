@@ -410,11 +410,11 @@
   "selector": {
     "region": {
       "options": {
-        "Europe": "Europa",
-        "NorthAmerica": "Nordamerika",
-        "AsiaPacific": "Asien-Pazifik",
-        "China": "China",
-        "Other": "Andere"
+        "europe": "Europa",
+        "northamerica": "Nordamerika",
+        "asiapacific": "Asien-Pazifik",
+        "china": "China",
+        "other": "Andere"
       }
     }
   }

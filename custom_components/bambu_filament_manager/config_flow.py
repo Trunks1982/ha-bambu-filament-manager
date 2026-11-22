@@ -100,8 +100,8 @@ class CloudSteps:
                 return await nxt if hasattr(nxt, "__await__") else nxt
             errors["base"] = nxt[1]
         schema = vol.Schema({
-            vol.Required("region", default="Europe"): selector.SelectSelector(
-                selector.SelectSelectorConfig(options=REGIONS, translation_key="region",
+            vol.Required("region", default="europe"): selector.SelectSelector(
+                selector.SelectSelectorConfig(options=list(REGIONS), translation_key="region",
                                               mode=selector.SelectSelectorMode.DROPDOWN)),
             vol.Required("email"): selector.TextSelector(selector.TextSelectorConfig(type=selector.TextSelectorType.EMAIL)),
             vol.Required("password"): selector.TextSelector(selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)),
